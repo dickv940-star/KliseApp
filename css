@@ -1,0 +1,254 @@
+/* ==========================
+   FilmHD - Style.css
+========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, Arial, sans-serif;
+}
+
+body{
+    background:#FFD54F;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* Layout */
+
+#app{
+    display:flex;
+    width:100%;
+    height:100vh;
+}
+
+/* ==========================
+   Sidebar
+========================== */
+
+.sidebar{
+    width:320px;
+    background:#FFF8E1;
+    border-right:2px solid #FBC02D;
+    overflow-y:auto;
+    padding:20px;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo h1{
+    color:#F57F17;
+    font-size:32px;
+}
+
+.logo span{
+    color:#666;
+    font-size:14px;
+}
+
+.section-title{
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+/* Card */
+
+.card{
+    background:#ffffff;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.card label{
+    display:block;
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:600;
+}
+
+/* Input */
+
+input[type=file]{
+    width:100%;
+}
+
+input[type=range]{
+    width:100%;
+    accent-color:#FFC107;
+    cursor:pointer;
+}
+
+select{
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    font-size:14px;
+}
+
+/* ==========================
+   Button
+========================== */
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background:#FFC107;
+    color:#222;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+button:hover{
+    background:#FFB300;
+    transform:translateY(-2px);
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+}
+
+.buttons button{
+    flex:1;
+}
+
+/* ==========================
+   Viewer
+========================== */
+
+.viewer{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    background:#FFE082;
+}
+
+/* Toolbar */
+
+.toolbar{
+    height:60px;
+    background:#FBC02D;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    border-bottom:2px solid #F9A825;
+}
+
+.toolbar button{
+    width:50px;
+    height:40px;
+    padding:0;
+}
+
+#zoomValue{
+    font-weight:bold;
+}
+
+/* ==========================
+   Canvas
+========================== */
+
+#canvasContainer{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    background:#FFFDE7;
+}
+
+canvas{
+    max-width:95%;
+    max-height:95%;
+    border-radius:10px;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+    background:white;
+}
+
+/* ==========================
+   Compare
+========================== */
+
+.compare{
+    background:#FFF8E1;
+    padding:15px;
+    border-top:2px solid #FBC02D;
+}
+
+.compare label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:10px;
+}
+
+/* ==========================
+   Histogram
+========================== */
+
+.histogram{
+    height:170px;
+    background:#FFF3CD;
+    border-top:2px solid #FBC02D;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+#histogramCanvas{
+    width:95%;
+    height:140px;
+    background:white;
+    border-radius:10px;
+}
+
+/* ==========================
+   Scrollbar
+========================== */
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#FBC02D;
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-track{
+    background:#FFF8E1;
+}
+
+/* ==========================
+   Responsive
+========================== */
+
+@media(max-width:768px){
+
+    #app{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+        height:auto;
+        border-right:none;
+        border-bottom:2px solid #FBC02D;
+    }
+
+    .viewer{
+        height:60vh;
+    }
+
+}
