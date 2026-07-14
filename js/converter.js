@@ -1,85 +1,25 @@
-// ======================================
+// =============================================
 // FilmHD
-// converter.js
-// Version : 0.3
-// ======================================
+// Converter Engine v2.0
+// =============================================
 
-const originalCanvas = document.createElement("canvas");
-const originalCtx = originalCanvas.getContext("2d");
+function convertImage(imageData){
 
-// ======================================
-// Ambil ImageData Asli
-// ======================================
+    const data=imageData.data;
 
-function getOriginalImageData() {
+    const settings={
 
-    if (!image || !image.width) return null;
+        exposure:Number(exposure.value),
 
-    originalCanvas.width = image.width;
-    originalCanvas.height = image.height;
+        contrast:Number(contrast.value),
 
-    originalCtx.clearRect(
-        0,
-        0,
-        image.width,
-        image.height
-    );
+        temperature:Number(temperature.value),
 
-    originalCtx.drawImage(image,0,0);
+        saturation:Number(saturation.value),
 
-    return originalCtx.getImageData(
-        0,
-        0,
-        image.width,
-        image.height
-    );
+        gamma:1.0
 
-}
-
-// ======================================
-// Update Image
-// Dipanggil setiap slider berubah
-// ======================================
-
-function updateImage(){
-
-    const imgData = getOriginalImageData();
-
-    if(!imgData) return;
-
-    processImage(imgData);
-
-    ctx.putImageData(
-        imgData,
-        0,
-        0
-    );
-
-}
-
-// ======================================
-// Mesin Konversi
-// ======================================
-
-function processImage(imageData){
-
-    const data = imageData.data;
-
-    const exp =
-        Number(exposure.value);
-
-    const con =
-        Number(contrast.value);
-
-    const temp =
-        Number(temperature.value);
-
-    const sat =
-        Number(saturation.value);
-
-    //------------------------------------
-    // Loop Pixel
-    //------------------------------------
+    };
 
     for(let i=0;i<data.length;i+=4){
 
@@ -87,83 +27,41 @@ function processImage(imageData){
         let g=data[i+1];
         let b=data[i+2];
 
-        // ===============================
-        // 1. Negative -> Positive
-        // ===============================
+        //--------------------------------------------------
+        // COLOR ENGINE
+        //--------------------------------------------------
 
-        r=255-r;
-        g=255-g;
-        b=255-b;
+        [r,g,b]=processPixel(
 
-        // ===============================
-        // 2. Exposure
-        // ===============================
+            r,
+            g,
+            b,
+            settings
 
-        const exposureFactor =
-            exp*1.8;
+        );
 
-        r+=exposureFactor;
-        g+=exposureFactor;
-        b+=exposureFactor;
+        //--------------------------------------------------
+        // FILM ENGINE
+        //--------------------------------------------------
 
-        // ===============================
-        // 3. White Balance
-        // ===============================
+        [r,g,b]=filmEngine(
 
-        r+=temp*0.7;
-        b-=temp*0.7;
+            r,
+            g,
+            b
 
-        // ===============================
-        // 4. Contrast
-        // ===============================
+        );
 
-        const factor =
-            (259*(con+255))/
-            (255*(259-con));
+        //--------------------------------------------------
+        // SAVE
+        //--------------------------------------------------
 
-        r=factor*(r-128)+128;
-        g=factor*(g-128)+128;
-        b=factor*(b-128)+128;
-
-        // ===============================
-        // 5. Saturation
-        // ===============================
-
-        const gray=
-            0.299*r+
-            0.587*g+
-            0.114*b;
-
-        const satFactor=
-            1+(sat/100);
-
-        r=gray+(r-gray)*satFactor;
-        g=gray+(g-gray)*satFactor;
-        b=gray+(b-gray)*satFactor;
-
-        // ===============================
-        // Clamp
-        // ===============================
-
-        data[i]=Math.max(0,Math.min(255,r));
-        data[i+1]=Math.max(0,Math.min(255,g));
-        data[i+2]=Math.max(0,Math.min(255,b));
+        data[i]=r;
+        data[i+1]=g;
+        data[i+2]=b;
 
     }
 
-}
-
-// ======================================
-// Reset Converter
-// ======================================
-
-function resetConverter(){
-
-    exposure.value=0;
-    contrast.value=0;
-    temperature.value=0;
-    saturation.value=0;
-
-    updateImage();
+    return imageData;
 
 }
