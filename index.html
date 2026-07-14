@@ -3,183 +3,387 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>FilmHD AI</title>
-
-<meta name="theme-color" content="#101010">
+<title>FilmHD</title>
 
 <link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/logo.png">
 
 <link rel="stylesheet" href="css/style.css">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="sidebar">
+<div id="app">
 
-<div class="logo">
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
 
-<h2>FilmHD AI</h2>
+    <aside class="sidebar">
 
-<p>Professional Film Converter</p>
+        <div class="logo">
+
+            <h1>FilmHD</h1>
+
+            <span>Analog Film Converter</span>
+
+        </div>
+
+
+
+        <!-- Upload -->
+
+        <div class="card">
+
+            <label class="section-title">
+
+                Upload Negative
+
+            </label>
+
+            <input
+            type="file"
+            id="fileInput"
+            accept="image/*">
+
+        </div>
+
+
+
+        <!-- AUTO PRESET -->
+
+        <div class="card">
+
+            <button id="btnAutoPreset">
+
+                AUTO PRESET
+
+            </button>
+
+        </div>
+
+
+
+        <!-- Preset -->
+
+        <div class="card">
+
+            <label class="section-title">
+
+                Film Preset
+
+            </label>
+
+            <select id="preset">
+
+                <option value="auto">
+                    Auto (BogellProject)
+                </option>
+
+                <option value="kodak_gold">
+                    Kodak Gold
+                </option>
+
+                <option value="portra">
+                    Kodak Portra
+                </option>
+
+                <option value="ultramax">
+                    Kodak Ultramax
+                </option>
+
+                <option value="fuji_c200">
+                    Fuji C200
+                </option>
+
+                <option value="superia">
+                    Fuji Superia
+                </option>
+
+                <option value="pro400h">
+                    Fuji Pro400H
+                </option>
+
+                <option value="hp5">
+                    Ilford HP5
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- Exposure -->
+
+        <div class="card">
+
+            <label>
+
+                Exposure
+
+            </label>
+
+            <input
+            type="range"
+            id="exposure"
+            min="-100"
+            max="100"
+            value="0">
+
+        </div>
+
+
+
+        <!-- Contrast -->
+
+        <div class="card">
+
+            <label>
+
+                Contrast
+
+            </label>
+
+            <input
+            type="range"
+            id="contrast"
+            min="-100"
+            max="100"
+            value="0">
+
+        </div>
+
+
+
+        <!-- White Balance -->
+
+        <div class="card">
+
+            <label>
+
+                White Balance
+
+            </label>
+
+            <input
+            type="range"
+            id="temperature"
+            min="-100"
+            max="100"
+            value="0">
+
+        </div>
+
+
+
+        <!-- Saturation -->
+
+        <div class="card">
+
+            <label>
+
+                Saturation
+
+            </label>
+
+            <input
+            type="range"
+            id="saturation"
+            min="-100"
+            max="100"
+            value="0">
+
+        </div>
+
+
+
+        <!-- Highlights -->
+
+        <div class="card">
+
+            <label>
+
+                Highlights
+
+            </label>
+
+            <input
+            type="range"
+            id="highlights"
+            min="-100"
+            max="100"
+            value="0">
+
+        </div>
+
+
+
+        <!-- Shadows -->
+
+        <div class="card">
+
+            <label>
+
+                Shadows
+
+            </label>
+
+            <input
+            type="range"
+            id="shadows"
+            min="-100"
+            max="100"
+            value="0">
+
+        </div>
+
+
+
+        <!-- Blacks -->
+
+        <div class="card">
+
+            <label>
+
+                Blacks
+
+            </label>
+
+            <input
+            type="range"
+            id="blacks"
+            min="-100"
+            max="100"
+            value="0">
+
+        </div>
+
+
+
+        <!-- Whites -->
+
+        <div class="card">
+
+            <label>
+
+                Whites
+
+            </label>
+
+            <input
+            type="range"
+            id="whites"
+            min="-100"
+            max="100"
+            value="0">
+
+        </div>
+
+
+
+        <!-- Buttons -->
+
+        <div class="card buttons">
+
+            <button id="btnReset">
+
+                Reset
+
+            </button>
+
+            <button id="btnSave">
+
+                Save JPEG
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ======================
+         MAIN
+    ======================= -->
+
+    <main class="viewer">
+
+        <!-- Toolbar -->
+
+        <div class="toolbar">
+
+            <button id="zoomOut">−</button>
+
+            <button id="zoomFit">Fit</button>
+
+            <button id="zoomIn">+</button>
+
+            <span id="zoomValue">
+
+                100%
+
+            </span>
+
+        </div>
+
+
+
+        <!-- Canvas -->
+
+        <div id="canvasContainer">
+
+            <canvas id="canvas"></canvas>
+
+        </div>
+
+
+
+        <!-- Before After -->
+
+        <div class="compare">
+
+            <label>
+
+                Before / After
+
+            </label>
+
+            <input
+            type="range"
+            id="compare"
+            min="0"
+            max="100"
+            value="100">
+
+        </div>
+
+
+
+        <!-- Histogram -->
+
+        <div class="histogram">
+
+            <canvas id="histogramCanvas">
+
+            </canvas>
+
+        </div>
+
+    </main>
 
 </div>
 
-<button id="uploadBtn">
-📂 Upload Film
-</button>
 
-<input
-type="file"
-id="upload"
-accept="image/*"
-hidden>
 
-<button id="scanBtn">
-📷 Scan Film
-</button>
-
-<button id="cameraBtn">
-📸 Camera
-</button>
-
-<hr>
-
-<button id="autoBtn">
-⚡ Auto Convert
-</button>
-
-<button id="presetBtn">
-🎞 Apply Preset
-</button>
-
-<button id="enhanceBtn">
-✨ AI Enhance
-</button>
-
-<button id="saveBtn">
-💾 Save JPEG HD
-</button>
-
-</div>
-
-<div class="content">
-
-<div class="toolbar">
-
-<h2>Negative Film Converter</h2>
-
-<div id="status">
-
-READY
-
-</div>
-
-</div>
-
-<div class="workspace">
-
-<div class="panel">
-
-<h3>Original</h3>
-
-<div class="viewer">
-
-<img id="beforeImage">
-
-</div>
-
-</div>
-
-<div class="panel">
-
-<h3>Converted</h3>
-
-<div class="viewer">
-
-<img id="afterImage">
-
-</div>
-
-</div>
-
-</div>
-
-<div class="bottom">
-
-<div class="slider">
-
-<label>
-
-Exposure
-
-</label>
-
-<input type="range" min="-100" max="100" value="0">
-
-</div>
-
-<div class="slider">
-
-<label>
-
-Contrast
-
-</label>
-
-<input type="range" min="-100" max="100" value="0">
-
-</div>
-
-<div class="slider">
-
-<label>
-
-Saturation
-
-</label>
-
-<input type="range" min="-100" max="100" value="0">
-
-</div>
-
-<div class="slider">
-
-<label>
-
-Sharpness
-
-</label>
-
-<input type="range" min="0" max="100" value="50">
-
-</div>
-
-</div>
-
-</div>
-
-<script src="js/app.js"></script>
 <script src="js/converter.js"></script>
-<script src="js/preset.js"></script>
 <script src="js/enhance.js"></script>
-
-<script>
-
-if("serviceWorker" in navigator){
-
-navigator.serviceWorker.register("service-worker.js");
-
-}
-
-</script>
+<script src="js/preset.js"></script>
+<script src="js/app.js"></script>
 
 </body>
 </html>
