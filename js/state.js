@@ -1,100 +1,217 @@
-// =======================================
+// ============================================
 // FilmHD v2
-// state.js
-// =======================================
+// State Manager
+// ============================================
 
 const EditorState = {
 
+    // Image
     image: null,
 
     originalWidth: 0,
     originalHeight: 0,
 
+    // View
     zoom: 1,
-
     rotation: 0,
 
     offsetX: 0,
     offsetY: 0,
 
+    flipX: false,
+    flipY: false,
+
     crop: null,
 
+    // Adjustment
     exposure: 0,
-
     contrast: 0,
-
-    temperature: 0,
-
     saturation: 0,
-
+    temperature: 0,
     gamma: 1,
 
+    // Film
     preset: "auto",
 
-    history: [],
+    // UI
+    beforeAfter: false,
 
-    redo: []
+    // History
+    history: [],
+    redoStack: []
 
 };
 
+// ============================================
+// Save State
+// ============================================
+
 function saveState(){
 
-    EditorState.history.push(
+    const snapshot = {
 
-        JSON.parse(
-            JSON.stringify(EditorState)
-        )
+        zoom: EditorState.zoom,
+        rotation: EditorState.rotation,
 
-    );
+        offsetX: EditorState.offsetX,
+        offsetY: EditorState.offsetY,
 
-    if(EditorState.history.length>30){
+        flipX: EditorState.flipX,
+        flipY: EditorState.flipY,
+
+        crop: EditorState.crop ?
+            JSON.parse(JSON.stringify(EditorState.crop))
+            : null,
+
+        exposure: EditorState.exposure,
+        contrast: EditorState.contrast,
+        saturation: EditorState.saturation,
+        temperature: EditorState.temperature,
+        gamma: EditorState.gamma,
+
+        preset: EditorState.preset
+
+    };
+
+    EditorState.history.push(snapshot);
+
+    if(EditorState.history.length>50){
 
         EditorState.history.shift();
 
     }
 
+    EditorState.redoStack=[];
+
 }
+
+// ============================================
+// Undo
+// ============================================
 
 function undo(){
 
-    if(EditorState.history.length==0)
+    if(EditorState.history.length===0)
         return;
 
-    EditorState.redo.push(
+    const current={
 
-        JSON.parse(
-            JSON.stringify(EditorState)
-        )
+        zoom:EditorState.zoom,
+        rotation:EditorState.rotation,
 
-    );
+        offsetX:EditorState.offsetX,
+        offsetY:EditorState.offsetY,
 
-    const state=
-        EditorState.history.pop();
+        flipX:EditorState.flipX,
+        flipY:EditorState.flipY,
 
-    Object.assign(
-        EditorState,
-        state
-    );
+        crop:EditorState.crop ?
+        JSON.parse(JSON.stringify(EditorState.crop))
+        : null,
 
-    render();
+        exposure:EditorState.exposure,
+        contrast:EditorState.contrast,
+        saturation:EditorState.saturation,
+        temperature:EditorState.temperature,
+        gamma:EditorState.gamma,
+
+        preset:EditorState.preset
+
+    };
+
+    EditorState.redoStack.push(current);
+
+    const prev=EditorState.history.pop();
+
+    Object.assign(EditorState,prev);
+
+    if(typeof requestRender==="function"){
+
+        requestRender();
+
+    }
 
 }
 
+// ============================================
+// Redo
+// ============================================
+
 function redo(){
 
-    if(EditorState.redo.length==0)
+    if(EditorState.redoStack.length===0)
         return;
 
     saveState();
 
-    const state=
-        EditorState.redo.pop();
+    const next=EditorState.redoStack.pop();
 
-    Object.assign(
-        EditorState,
-        state
-    );
+    Object.assign(EditorState,next);
 
-    render();
+    if(typeof requestRender==="function"){
+
+        requestRender();
+
+    }
+
+}
+
+// ============================================
+// Reset View
+// ============================================
+
+function resetView(){
+
+    EditorState.zoom=1;
+
+    EditorState.rotation=0;
+
+    EditorState.offsetX=0;
+
+    EditorState.offsetY=0;
+
+    EditorState.flipX=false;
+
+    EditorState.flipY=false;
+
+    EditorState.crop=null;
+
+}
+
+// ============================================
+// Reset Adjustment
+// ============================================
+
+function resetAdjustment(){
+
+    EditorState.exposure=0;
+
+    EditorState.contrast=0;
+
+    EditorState.temperature=0;
+
+    EditorState.saturation=0;
+
+    EditorState.gamma=1;
+
+    EditorState.preset="auto";
+
+}
+
+// ============================================
+// Full Reset
+// ============================================
+
+function resetEditor(){
+
+    resetView();
+
+    resetAdjustment();
+
+    if(typeof requestRender==="function"){
+
+        requestRender();
+
+    }
 
 }
