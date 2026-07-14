@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>FilmHD AI</title>
+
+<meta name="theme-color" content="#101010">
+
+<link rel="manifest" href="manifest.json">
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+
+<h2>FilmHD AI</h2>
+
+<p>Professional Film Converter</p>
+
+</div>
+
+<button id="uploadBtn">
+📂 Upload Film
+</button>
+
+<input
+type="file"
+id="upload"
+accept="image/*"
+hidden>
+
+<button id="scanBtn">
+📷 Scan Film
+</button>
+
+<button id="cameraBtn">
+📸 Camera
+</button>
+
+<hr>
+
+<button id="autoBtn">
+⚡ Auto Convert
+</button>
+
+<button id="presetBtn">
+🎞 Apply Preset
+</button>
+
+<button id="enhanceBtn">
+✨ AI Enhance
+</button>
+
+<button id="saveBtn">
+💾 Save JPEG HD
+</button>
+
+</div>
+
+<div class="content">
+
+<div class="toolbar">
+
+<h2>Negative Film Converter</h2>
+
+<div id="status">
+
+READY
+
+</div>
+
+</div>
+
+<div class="workspace">
+
+<div class="panel">
+
+<h3>Original</h3>
+
+<div class="viewer">
+
+<img id="beforeImage">
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Converted</h3>
+
+<div class="viewer">
+
+<img id="afterImage">
+
+</div>
+
+</div>
+
+</div>
+
+<div class="bottom">
+
+<div class="slider">
+
+<label>
+
+Exposure
+
+</label>
+
+<input type="range" min="-100" max="100" value="0">
+
+</div>
+
+<div class="slider">
+
+<label>
+
+Contrast
+
+</label>
+
+<input type="range" min="-100" max="100" value="0">
+
+</div>
+
+<div class="slider">
+
+<label>
+
+Saturation
+
+</label>
+
+<input type="range" min="-100" max="100" value="0">
+
+</div>
+
+<div class="slider">
+
+<label>
+
+Sharpness
+
+</label>
+
+<input type="range" min="0" max="100" value="50">
+
+</div>
+
+</div>
+
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/converter.js"></script>
+<script src="js/preset.js"></script>
+<script src="js/enhance.js"></script>
+
+<script>
+
+if("serviceWorker" in navigator){
+
+navigator.serviceWorker.register("service-worker.js");
+
+}
+
+</script>
+
+</body>
+</html>
