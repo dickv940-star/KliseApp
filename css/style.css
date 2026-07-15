@@ -462,5 +462,48 @@ footer{
         transform:none;
 
     }
+.button-column{
 
+display:flex;
+flex-direction:column;
+gap:12px;
+
+}
+
+.button-row{
+
+display:flex;
+gap:12px;
+
+}
+
+.button-row button{
+
+flex:1;
+
+}
+
+.restore-grid{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:15px;
+
+}
+
+.primary{
+
+width:100%;
+
+}
+
+button{
+
+height:52px;
+border-radius:14px;
+font-size:15px;
+font-weight:600;
+
+}
 }
