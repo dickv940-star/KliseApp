@@ -1,201 +1,120 @@
 /*
-=========================================
+=========================================================
 Film Scan Studio
-Export Manager
+Export Engine
 Version 1.0
-=========================================
+AppDIGI
+=========================================================
 */
 
-const ExportManager = {
 
-    quality: 1.0,
+const ExportEngine = {
 
-    fileName(prefix = "FilmScan") {
 
-        const now = new Date();
+    canvas:null,
 
-        const year = now.getFullYear();
 
-        const month = String(
-            now.getMonth() + 1
-        ).padStart(2, "0");
 
-        const day = String(
-            now.getDate()
-        ).padStart(2, "0");
+    init(){
 
-        const hour = String(
-            now.getHours()
-        ).padStart(2, "0");
 
-        const minute = String(
-            now.getMinutes()
-        ).padStart(2, "0");
+        this.canvas =
+            document.getElementById(
+                "preview"
+            );
 
-        const second = String(
-            now.getSeconds()
-        ).padStart(2, "0");
 
-        return `${prefix}_${year}${month}${day}_${hour}${minute}${second}`;
-
-    },
-
-    download(blob, filename) {
-
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-
-        a.href = url;
-
-        a.download = filename;
-
-        document.body.appendChild(a);
-
-        a.click();
-
-        a.remove();
-
-        setTimeout(() => {
-
-            URL.revokeObjectURL(url);
-
-        }, 1000);
-
-    },
-
-    jpg(canvas, quality = this.quality) {
-
-        canvas.toBlob(
-
-            (blob) => {
-
-                this.download(
-
-                    blob,
-
-                    this.fileName() + ".jpg"
-
-                );
-
-                console.log("Export JPG");
-
-            },
-
-            "image/jpeg",
-
-            quality
-
+        console.log(
+            "Export Engine Ready"
         );
 
+
     },
 
-    png(canvas) {
 
-        canvas.toBlob(
 
-            (blob) => {
 
-                this.download(
+    exportJPG(){
 
-                    blob,
 
-                    this.fileName() + ".png"
+        if(!this.canvas){
 
+
+            this.canvas =
+                document.getElementById(
+                    "preview"
                 );
 
-                console.log("Export PNG");
-
-            },
-
-            "image/png"
-
-        );
-
-    },
-
-    webp(canvas, quality = this.quality) {
-
-        canvas.toBlob(
-
-            (blob) => {
-
-                this.download(
-
-                    blob,
-
-                    this.fileName() + ".webp"
-
-                );
-
-                console.log("Export WEBP");
-
-            },
-
-            "image/webp",
-
-            quality
-
-        );
-
-    },
-
-    async copyClipboard(canvas) {
-
-        if (!navigator.clipboard) {
-
-            console.warn("Clipboard tidak didukung.");
-
-            return;
 
         }
 
-        return new Promise((resolve) => {
 
-            canvas.toBlob(async (blob) => {
 
-                try {
+        if(!this.canvas){
 
-                    await navigator.clipboard.write([
 
-                        new ClipboardItem({
+            console.error(
+                "Preview canvas tidak ditemukan"
+            );
 
-                            [blob.type]: blob
 
-                        })
+            return;
 
-                    ]);
 
-                    console.log("Gambar disalin ke clipboard");
+        }
 
-                    resolve(true);
 
-                } catch (e) {
 
-                    console.error(e);
+        const link =
+            document.createElement(
+                "a"
+            );
 
-                    resolve(false);
 
-                }
+        link.download =
+            "film-scan-result.jpg";
 
-            });
 
-        });
 
-    },
+        link.href =
+            this.canvas.toDataURL(
+                "image/jpeg",
+                0.95
+            );
 
-    setQuality(value) {
 
-        value = Number(value);
 
-        if (isNaN(value)) return;
+        link.click();
 
-        if (value < 0.1) value = 0.1;
 
-        if (value > 1) value = 1;
 
-        this.quality = value;
+        console.log(
+            "Export JPG Finished"
+        );
+
 
     }
 
+
+
+
 };
+
+
+
+
+
+window.ExportEngine =
+    ExportEngine;
+
+
+
+window.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+
+    ExportEngine.init();
+
+
+});
