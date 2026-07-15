@@ -2,7 +2,7 @@
 =========================================================
 Film Scan Studio
 HD Detail Enhance Engine
-Version 1.0
+Version 1.1
 AppDIGI
 =========================================================
 */
@@ -14,18 +14,39 @@ window.DetailEnhance = {
     name:"HD Detail Enhance",
 
 
+
     apply(imageData){
+
 
         console.log(
             "Applying HD Detail Enhance..."
         );
 
 
+
+        // fallback jika engine tidak mengirim imageData
+
+        if(!imageData){
+
+
+            console.warn(
+                "DetailEnhance: ImageData kosong"
+            );
+
+
+            return null;
+
+        }
+
+
+
         const data =
             imageData.data;
 
 
-        const strength = 1.15;
+
+        const strength = 1.12;
+
 
 
         for(
@@ -34,10 +55,22 @@ window.DetailEnhance = {
             i+=4
         ){
 
-            let r=data[i];
-            let g=data[i+1];
-            let b=data[i+2];
 
+            let r =
+                data[i];
+
+
+            let g =
+                data[i+1];
+
+
+            let b =
+                data[i+2];
+
+
+
+
+            // micro contrast
 
             r =
             128 +
@@ -58,6 +91,7 @@ window.DetailEnhance = {
 
 
 
+
             data[i] =
             Math.max(
                 0,
@@ -66,6 +100,7 @@ window.DetailEnhance = {
                     r
                 )
             );
+
 
 
             data[i+1] =
@@ -78,6 +113,7 @@ window.DetailEnhance = {
             );
 
 
+
             data[i+2] =
             Math.max(
                 0,
@@ -88,7 +124,9 @@ window.DetailEnhance = {
             );
 
 
+
         }
+
 
 
         console.log(
@@ -96,12 +134,17 @@ window.DetailEnhance = {
         );
 
 
+
         return imageData;
+
+
 
     }
 
 
+
 };
+
 
 
 console.log(
