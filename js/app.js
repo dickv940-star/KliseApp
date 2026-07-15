@@ -17,6 +17,8 @@ const App = {
 
     processing:false,
 
+deferredPrompt:null,
+
 
 //--------------------------------------------------
 
@@ -658,7 +660,63 @@ UI.loading(false);
 
 
 
+//--------------------------------------------------
+// Install PWA
+//--------------------------------------------------
 
+initInstall(){
+
+    const installBtn =
+        document.getElementById("installApp");
+
+    if(!installBtn) return;
+
+    installBtn.hidden = true;
+
+    window.addEventListener(
+        "beforeinstallprompt",
+        (e)=>{
+
+            e.preventDefault();
+
+            this.deferredPrompt = e;
+
+            installBtn.hidden = false;
+
+            console.log("Install Prompt Ready");
+
+        }
+    );
+
+    installBtn.addEventListener(
+        "click",
+        async()=>{
+
+            if(!this.deferredPrompt){
+
+                alert(
+                    "Install belum tersedia."
+                );
+
+                return;
+
+            }
+
+            this.deferredPrompt.prompt();
+
+            const result =
+                await this.deferredPrompt.userChoice;
+
+            console.log(result.outcome);
+
+            this.deferredPrompt = null;
+
+            installBtn.hidden = true;
+
+        }
+    );
+
+}
 
 //--------------------------------------------------
 
@@ -698,81 +756,23 @@ err
 
 });
 
-
 }
-
-    };
-
-//------------------------------------------------
-// Install PWA
-//------------------------------------------------
-
-let deferredPrompt = null;
-
-window.addEventListener(
-    "beforeinstallprompt",
-    (e)=>{
-
-        e.preventDefault();
-
-        deferredPrompt = e;
-
-        const btn =
-            document.getElementById(
-                "installApp"
-            );
-
-        if(btn){
-
-            btn.hidden = false;
-
-        }
-
-    }
-);
-
-const installBtn =
-document.getElementById(
-    "installApp"
-);
-
-if(installBtn){
-
-    installBtn.onclick = async()=>{
-
-        if(!deferredPrompt){
-
-            alert(
-                "Aplikasi sudah terinstall atau browser tidak mendukung."
-            );
-
-            return;
-
-        }
-
-        deferredPrompt.prompt();
-
-        const result =
-        await deferredPrompt.userChoice;
-
-        console.log(result.outcome);
-
-        deferredPrompt = null;
-
-        installBtn.hidden = true;
-
-    };
-
-}
-
-
 
 window.addEventListener(
 "load",
 ()=>{
 
 
-App.init();
+UI.init();
 
+this.bindEvents();
 
+this.initInstall();
+
+this.registerServiceWorker();
+
+UI.status("Ready");
+
+UI.enableGenerate(false);
+UI.enableExport(false);
 });
