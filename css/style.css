@@ -1267,3 +1267,34 @@ UTILITY
     width:100%;
 
 }
+.install-btn{
+
+    margin-top:18px;
+
+    padding:12px 24px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#00C853;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.install-btn:hover{
+
+    background:#00B248;
+
+    transform:translateY(-2px);
+
+}
