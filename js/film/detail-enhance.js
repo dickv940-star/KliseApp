@@ -8,15 +8,13 @@ AppDIGI
 */
 
 
-const DetailEnhance = {
+window.DetailEnhance = {
 
 
     name:"HD Detail Enhance",
 
 
-
     apply(imageData){
-
 
         console.log(
             "Applying HD Detail Enhance..."
@@ -27,9 +25,7 @@ const DetailEnhance = {
             imageData.data;
 
 
-
         const strength = 1.15;
-
 
 
         for(
@@ -38,16 +34,10 @@ const DetailEnhance = {
             i+=4
         ){
 
-
             let r=data[i];
-
             let g=data[i+1];
-
             let b=data[i+2];
 
-
-
-            // micro contrast
 
             r =
             128 +
@@ -68,40 +58,37 @@ const DetailEnhance = {
 
 
 
-
             data[i] =
-                Math.max(
-                    0,
-                    Math.min(
-                        255,
-                        r
-                    )
-                );
+            Math.max(
+                0,
+                Math.min(
+                    255,
+                    r
+                )
+            );
 
 
             data[i+1] =
-                Math.max(
-                    0,
-                    Math.min(
-                        255,
-                        g
-                    )
-                );
+            Math.max(
+                0,
+                Math.min(
+                    255,
+                    g
+                )
+            );
 
 
             data[i+2] =
-                Math.max(
-                    0,
-                    Math.min(
-                        255,
-                        b
-                    )
-                );
-
+            Math.max(
+                0,
+                Math.min(
+                    255,
+                    b
+                )
+            );
 
 
         }
-
 
 
         console.log(
@@ -109,20 +96,12 @@ const DetailEnhance = {
         );
 
 
-
         return imageData;
-
 
     }
 
 
 };
-
-
-
-window.DetailEnhance =
-    DetailEnhance;
-
 
 
 console.log(
