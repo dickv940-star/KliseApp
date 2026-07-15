@@ -1,10 +1,10 @@
-/*
+/
 =========================================================
 Film Scan Studio
 Real AI Super Resolution
 Version 2.0
 =========================================================
-*/
+/
 
 
 const SuperResolution = {
