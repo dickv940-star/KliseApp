@@ -62,17 +62,13 @@ willReadFrequently:true
 
 UI.init();
 
-
 this.bindEvents();
 
+this.initInstall();
 
 this.registerServiceWorker();
 
-
-UI.status(
-"Ready"
-);
-
+UI.status("Ready");
 
 UI.enableGenerate(false);
 
@@ -722,57 +718,33 @@ initInstall(){
 
 registerServiceWorker(){
 
+    if(!("serviceWorker" in navigator))
+        return;
 
+    navigator.serviceWorker
+        .register("./service-worker.js")
+        .then(()=>{
 
-if(
-!"serviceWorker" in navigator
-)
-return;
+            console.log(
+                "Service Worker Registered"
+            );
 
+        })
+        .catch(err=>{
 
+            console.error(err);
 
-navigator.serviceWorker
-.register(
-"./service-worker.js"
-)
-.then(()=>{
-
-
-console.log(
-"Service Worker Registered"
-);
-
-
-
-})
-.catch(err=>{
-
-
-console.error(
-err
-);
-
-
-
-});
+        });
 
 }
 
+};
+
 window.addEventListener(
-"load",
-()=>{
+    "load",
+    ()=>{
 
+        App.init();
 
-UI.init();
-
-this.bindEvents();
-
-this.initInstall();
-
-this.registerServiceWorker();
-
-UI.status("Ready");
-
-UI.enableGenerate(false);
-UI.enableExport(false);
-});
+    }
+);
