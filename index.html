@@ -5,131 +5,114 @@
 
 <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width,initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
 
 <title>Film Scan Studio</title>
 
-<meta
-    name="theme-color"
-    content="#6C63FF">
+<meta name="theme-color"
+content="#6C63FF">
 
 <meta
-    name="description"
-    content="Film Scan Studio - AI Negative Scanner">
+name="description"
+content="AI Film Negative Scanner">
 
-<link
-    rel="manifest"
-    href="manifest.json">
+<link rel="manifest"
+href="manifest.json">
 
-<link
-    rel="icon"
-    href="assets/icon-192.png">
+<link rel="icon"
+href="assets/icon-192.png">
 
-<link
-    rel="apple-touch-icon"
-    href="assets/icon-192.png">
+<link rel="apple-touch-icon"
+href="assets/icon-192.png">
 
-<link
-    rel="stylesheet"
-    href="style.css">
+<link rel="stylesheet"
+href="style.css">
 
 </head>
 
 <body>
 
-<!-- ======================================= -->
-
 <div id="loading">
 
-    <div class="loader"></div>
+<div class="loader"></div>
 
 </div>
-
-<!-- ======================================= -->
 
 <div class="container">
 
 <header>
 
-<h1>
+<img
+src="assets/logo.png"
+class="logo"
+alt="Logo">
 
-🎞 Film Scan Studio
+<h1>Film Scan Studio</h1>
 
-</h1>
-
-<p>
-
-AI Negative Film Scanner
-
-</p>
+<p>AI Negative Film Scanner</p>
 
 </header>
 
-<!-- ======================================= -->
+<main>
 
-<div class="card fade">
+<!-- Upload -->
+
+<section class="card">
 
 <div id="dropArea">
 
-<h2>
-
-Upload Scan Klise
-
-</h2>
-
-<br>
+<h2>Upload Scan Klise</h2>
 
 <p>
 
-Klik atau Drag & Drop
+Drag & Drop atau klik di sini
 
 </p>
 
-<br>
-
 <input
-
 id="upload"
-
 type="file"
+accept="image/*"
+hidden>
 
-accept="image/*">
+<button
+id="browse">
+
+Pilih Foto
+
+</button>
 
 </div>
 
-</div>
+</section>
 
-<!-- ======================================= -->
+<!-- Preview -->
 
-<div class="card fade">
+<section class="card">
 
-<h2>
-
-Preview
-
-</h2>
-
-<br>
+<h2>Preview</h2>
 
 <canvas
-
-id="preview">
+id="preview"
+width="1200"
+height="800">
 
 </canvas>
 
+</section>
+
+<!-- Status -->
+
+<section class="card">
+
+<h3>Status</h3>
+
+<div id="status">
+
+Ready
+
 </div>
-
-<!-- ======================================= -->
-
-<div class="card fade">
-
-<h3>
-
-Processing
-
-</h3>
 
 <div class="progress">
 
@@ -143,81 +126,82 @@ Processing
 
 </div>
 
-<div id="status">
+</section>
 
-Ready
+<!-- Tombol -->
 
-</div>
-
-</div>
-
-<!-- ======================================= -->
-
-<div class="card fade">
-
-<h3>
-
-Pipeline
-
-</h3>
-
-<br>
-
-<ul id="pipeline">
-
-<li>✅ Detector</li>
-
-<li>✅ Orange Mask</li>
-
-<li>✅ Invert</li>
-
-<li>✅ White Balance</li>
-
-<li>✅ Levels</li>
-
-<li>✅ Tone Curve</li>
-
-<li>✅ Dehaze</li>
-
-<li>✅ Vibrance</li>
-
-<li>✅ Saturation</li>
-
-<li>✅ Bogell Inspired</li>
-
-<li>✅ Noise Reduction</li>
-
-<li>✅ Sharpen</li>
-
-<li>✅ Film Grain</li>
-
-</ul>
-
-</div>
-
-<!-- ======================================= -->
+<section class="card">
 
 <div class="button-group">
 
-<button id="generate">
+<button
+id="generate">
 
-Generate Preset
-
-</button>
-
-<button id="reset">
-
-Reset
+🎞 Generate Preset
 
 </button>
 
-<button id="export">
+<button
+id="reset">
 
-Export JPG
+↺ Reset
+
+</button>
+
+<button
+id="export">
+
+⬇ Export JPG
 
 </button>
 
 </div>
+
+</section>
+
+<!-- Pipeline -->
+
+<section class="card">
+
+<h3>
+
+Processing Pipeline
+
+</h3>
+
+<ul class="pipeline">
+
+<li id="step-detector">Detector</li>
+
+<li id="step-mask">Orange Mask</li>
+
+<li id="step-invert">Invert</li>
+
+<li id="step-wb">White Balance</li>
+
+<li id="step-level">Levels</li>
+
+<li id="step-curve">Tone Curve</li>
+
+<li id="step-dehaze">Dehaze</li>
+
+<li id="step-vibrance">Vibrance</li>
+
+<li id="step-saturation">Saturation</li>
+
+<li id="step-bogell">Bogell</li>
+
+<li id="step-noise">Noise Reduction</li>
+
+<li id="step-sharpen">Sharpen</li>
+
+<li id="step-grain">Film Grain</li>
+
+</ul>
+
+</section>
+
+</main>
 
 <footer>
 
@@ -233,47 +217,30 @@ Powered by AppDIGI
 
 <div id="toast"></div>
 
-<!-- ======================================= -->
 <!-- Core -->
 
 <script src="js/ui.js"></script>
-
 <script src="js/image-engine.js"></script>
-
 <script src="js/export.js"></script>
 
-<!-- ======================================= -->
 <!-- Film Engine -->
 
 <script src="js/film/detector.js"></script>
-
 <script src="js/film/orange-mask.js"></script>
-
 <script src="js/film/invert.js"></script>
-
 <script src="js/film/whitebalance.js"></script>
-
 <script src="js/film/levels.js"></script>
-
 <script src="js/film/tonecurve.js"></script>
-
 <script src="js/film/dehaze.js"></script>
-
 <script src="js/film/vibrance.js"></script>
-
 <script src="js/film/saturation.js"></script>
-
 <script src="js/film/bogell.js"></script>
-
 <script src="js/film/noise.js"></script>
-
 <script src="js/film/sharpen.js"></script>
-
 <script src="js/film/grain.js"></script>
-
 <script src="js/film/engine.js"></script>
 
-<!-- ======================================= -->
+<!-- Controller -->
 
 <script src="js/app.js"></script>
 
