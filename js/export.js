@@ -46,7 +46,7 @@ const ExportEngine = {
             link.href =
                 canvas.toDataURL(
                     "image/jpeg",
-                    0.95
+                        1.0
                 );
 
 
