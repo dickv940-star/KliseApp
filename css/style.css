@@ -1,166 +1,173 @@
-/* ===================================================
-   Film Scan Studio
-   AppDIGI
-=================================================== */
+/*
+=========================================================
+Film Scan Studio
+Style
+Version 2.0
+AppDIGI
+=========================================================
+*/
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+}
+
+:root{
+
+    --primary:#6C63FF;
+    --secondary:#8A84FF;
+    --success:#00C853;
+    --danger:#FF5252;
+
+    --bg:#0F1117;
+    --card:#181C25;
+    --card2:#202531;
+
+    --text:#FFFFFF;
+    --text2:#AAB2C5;
+
+    --border:#2E3444;
+
+    --radius:16px;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
 }
 
 body{
 
-    background:#111;
+    background:var(--bg);
 
-    color:#fff;
+    color:var(--text);
+
+    font-family:
+
+        Inter,
+
+        Arial,
+
+        sans-serif;
 
     min-height:100vh;
 
 }
 
-/* ================= HEADER ================= */
+/*=====================================*/
 
-header{
+.container{
 
-    background:#1b1b1b;
+    width:min(1100px,95%);
 
-    padding:20px;
+    margin:auto;
 
-    text-align:center;
-
-    border-bottom:1px solid #333;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:100;
+    padding:30px 0;
 
 }
 
-.logo{
+/*=====================================*/
 
-    width:80px;
+header{
 
-    height:80px;
+    text-align:center;
 
-    object-fit:contain;
-
-    margin-bottom:10px;
+    margin-bottom:30px;
 
 }
 
 header h1{
 
-    font-size:28px;
+    font-size:32px;
 
-    font-weight:700;
-
-    color:#ffffff;
+    margin-bottom:10px;
 
 }
 
 header p{
 
-    color:#aaa;
-
-    margin-top:6px;
-
-    font-size:14px;
+    color:var(--text2);
 
 }
 
-/* ================= MAIN ================= */
+/*=====================================*/
 
-main{
+.card{
 
-    width:100%;
+    background:var(--card);
 
-    max-width:1200px;
+    border-radius:var(--radius);
 
-    margin:auto;
-
-    padding:20px;
-
-}
-
-/* ================= CARD ================= */
-
-section{
-
-    background:#1a1a1a;
-
-    border-radius:16px;
+    border:1px solid var(--border);
 
     padding:20px;
 
     margin-bottom:20px;
 
-    box-shadow:0 8px 30px rgba(0,0,0,.35);
-
 }
 
-/* ================= Upload ================= */
+/*=====================================*/
 
-.upload{
+#dropArea{
 
     border:2px dashed #555;
 
-    transition:.3s;
+    border-radius:18px;
 
-    text-align:center;
-
-}
-
-.upload:hover{
-
-    border-color:#4cafef;
-
-    background:#202020;
-
-}
-
-input[type=file]{
-
-    width:100%;
-
-    color:white;
-
-    padding:25px;
+    padding:40px;
 
     cursor:pointer;
 
+    text-align:center;
+
+    transition:.3s;
+
 }
 
-/* ================= Canvas ================= */
+#dropArea:hover{
+
+    border-color:var(--primary);
+
+    background:#20242d;
+
+}
+
+#dropArea.drag{
+
+    border-color:#00E5FF;
+
+    background:#28303d;
+
+}
+
+/*=====================================*/
 
 canvas{
 
     width:100%;
 
-    border-radius:12px;
+    display:block;
+
+    border-radius:16px;
 
     background:#000;
 
-    display:block;
-
-    min-height:400px;
-
-    object-fit:contain;
-
 }
 
-/* ================= BUTTON ================= */
+/*=====================================*/
 
-.buttons{
+.button-group{
 
     display:flex;
 
     gap:15px;
 
     flex-wrap:wrap;
+
+    margin-top:20px;
 
 }
 
@@ -170,13 +177,13 @@ button{
 
     min-width:180px;
 
-    padding:16px;
-
     border:none;
 
-    border-radius:12px;
-
     cursor:pointer;
+
+    padding:16px;
+
+    border-radius:14px;
 
     font-size:16px;
 
@@ -186,205 +193,141 @@ button{
 
 }
 
-/* Generate */
-
-#generate{
-
-    background:#00b894;
-
-    color:white;
-
-}
-
-#generate:hover{
-
-    background:#00a382;
+button:hover{
 
     transform:translateY(-2px);
 
 }
-
-/* Export */
-
-#export{
-
-    background:#0984e3;
-
-    color:white;
-
-}
-
-#export:hover{
-
-    background:#0875ca;
-
-    transform:translateY(-2px);
-
-}
-
-/* Disabled */
 
 button:disabled{
 
-    opacity:.4;
+    opacity:.45;
 
     cursor:not-allowed;
 
 }
 
-/* ================= PANEL ================= */
+/*=====================================*/
 
-.panel{
+#generate{
 
-    display:grid;
+    background:var(--primary);
 
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-    gap:15px;
+    color:white;
 
 }
 
-.card{
+#export{
 
-    background:#202020;
+    background:var(--success);
 
-    padding:18px;
-
-    border-radius:12px;
+    color:white;
 
 }
 
-.card h3{
+#reset{
 
-    margin-bottom:10px;
+    background:#3A4153;
 
-    color:#ddd;
-
-}
-
-.card label{
-
-    display:block;
-
-    margin-bottom:8px;
-
-    color:#aaa;
+    color:white;
 
 }
 
-.card input[type=range]{
-
-    width:100%;
-
-}
-
-/* ================= Preview ================= */
-
-.preview{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:20px;
-
-}
-
-.preview img{
-
-    width:100%;
-
-    border-radius:12px;
-
-}
-
-/* ================= Footer ================= */
-
-footer{
-
-    text-align:center;
-
-    padding:30px;
-
-    color:#777;
-
-    font-size:14px;
-
-}
-
-/* ================= Progress ================= */
+/*=====================================*/
 
 .progress{
 
     width:100%;
 
-    height:8px;
+    height:10px;
 
-    background:#333;
+    background:#2D3242;
 
-    border-radius:50px;
+    border-radius:999px;
 
     overflow:hidden;
 
+    margin-top:18px;
+
 }
 
-.progress div{
+#progress{
 
     width:0%;
 
     height:100%;
 
-    background:#00d084;
+    background:linear-gradient(
 
-    transition:.3s;
+        90deg,
+
+        #6C63FF,
+
+        #00D4FF
+
+    );
+
+    transition:.25s;
 
 }
 
-/* ================= Toast ================= */
+/*=====================================*/
 
-.toast{
+#progressText{
+
+    margin-top:10px;
+
+    text-align:right;
+
+    color:var(--text2);
+
+}
+
+/*=====================================*/
+
+#status{
+
+    margin-top:15px;
+
+    color:#AAB2C5;
+
+}
+
+/*=====================================*/
+
+#loading{
 
     position:fixed;
 
-    bottom:20px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    background:#222;
-
-    color:white;
-
-    padding:14px 20px;
-
-    border-radius:10px;
-
-    box-shadow:0 5px 20px rgba(0,0,0,.4);
+    inset:0;
 
     display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:rgba(0,0,0,.72);
+
+    backdrop-filter:blur(5px);
 
     z-index:9999;
 
 }
 
-/* ================= Loader ================= */
-
 .loader{
 
-    width:55px;
+    width:70px;
 
-    height:55px;
-
-    border:5px solid #444;
-
-    border-top:5px solid #00b894;
+    height:70px;
 
     border-radius:50%;
 
-    animation:spin 1s linear infinite;
+    border:6px solid rgba(255,255,255,.15);
 
-    margin:auto;
+    border-top:6px solid white;
+
+    animation:spin .9s linear infinite;
 
 }
 
@@ -392,7 +335,7 @@ footer{
 
     from{
 
-        transform:rotate(0deg);
+        transform:rotate(0);
 
     }
 
@@ -404,74 +347,120 @@ footer{
 
 }
 
-/* ================= Responsive ================= */
+/*=====================================*/
+
+.toast{
+
+    position:fixed;
+
+    bottom:30px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#222;
+
+    color:white;
+
+    padding:14px 26px;
+
+    border-radius:12px;
+
+    opacity:0;
+
+    transition:.3s;
+
+    pointer-events:none;
+
+    z-index:99999;
+
+}
+
+.toast.show{
+
+    opacity:1;
+
+}
+
+/*=====================================*/
+
+footer{
+
+    text-align:center;
+
+    margin-top:35px;
+
+    color:#7E879A;
+
+    font-size:14px;
+
+}
+
+/*=====================================*/
 
 @media(max-width:768px){
 
-header{
+    header h1{
 
-    padding:15px;
+        font-size:24px;
 
-}
+    }
 
-.logo{
+    .button-group{
 
-    width:65px;
+        flex-direction:column;
 
-    height:65px;
+    }
 
-}
+    button{
 
-header h1{
+        width:100%;
 
-    font-size:22px;
+    }
 
-}
+    #dropArea{
 
-main{
+        padding:25px;
 
-    padding:15px;
-
-}
-
-.buttons{
-
-    flex-direction:column;
+    }
 
 }
 
-button{
+/*=====================================*/
 
-    width:100%;
+.glass{
 
-}
+    background:rgba(255,255,255,.04);
 
-.preview{
-
-    grid-template-columns:1fr;
+    backdrop-filter:blur(18px);
 
 }
 
-canvas{
+/*=====================================*/
 
-    min-height:280px;
+.fade{
 
-}
-
-}
-
-@media(min-width:1200px){
-
-main{
-
-    max-width:1400px;
+    animation:fade .4s ease;
 
 }
 
-canvas{
+@keyframes fade{
 
-    min-height:700px;
+    from{
 
-}
+        opacity:0;
+
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
 
 }
