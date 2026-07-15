@@ -1,106 +1,136 @@
 /*
-=========================================
+=========================================================
 Film Scan Studio
 App Controller
 Version 2.0
 AppDIGI
-=========================================
+=========================================================
 */
 
 const App = {
 
     canvas: null,
+
     ctx: null,
 
-    init() {
+    originalImage: null,
 
+    processed: false,
+
+    //--------------------------------------------------
+
+    async init() {
+
+        console.log("================================");
         console.log("Film Scan Studio Started");
+        console.log("================================");
 
-        this.canvas = document.getElementById("canvas");
+        this.canvas = document.getElementById("preview");
+
         this.ctx = this.canvas.getContext("2d", {
             willReadFrequently: true
         });
 
-        ImageEngine.init(this.canvas);
+        this.bindEvents();
 
-        this.bindUpload();
+        if ("serviceWorker" in navigator) {
 
-        this.bindExport();
+            navigator.serviceWorker
+                .register("./service-worker.js")
+                .then(() => {
+
+                    console.log(
+                        "Service Worker Registered"
+                    );
+
+                });
+
+        }
 
     },
 
-    bindUpload() {
+    //--------------------------------------------------
+
+    bindEvents() {
+
+        //------------------------------------------
+        // Upload
+        //------------------------------------------
 
         const upload = document.getElementById("upload");
 
-        upload.addEventListener("change", async (e) => {
+        upload.addEventListener(
+            "change",
+            (e) => {
 
-            const file = e.target.files[0];
+                this.loadImage(
+                    e.target.files[0]
+                );
 
-            if (!file) return;
+            }
+        );
 
-            await this.process(file);
+        //------------------------------------------
+        // Generate
+        //------------------------------------------
 
-        });
+        document
+            .getElementById("generate")
+            .addEventListener(
+                "click",
+                () => {
 
-        const area = document.querySelector(".upload");
+                    this.generate();
 
-        area.addEventListener("dragover", (e) => {
+                }
+            );
 
-            e.preventDefault();
+        //------------------------------------------
+        // Export
+        //------------------------------------------
 
-            area.style.borderColor = "#00b894";
+        document
+            .getElementById("export")
+            .addEventListener(
+                "click",
+                () => {
 
-        });
+                    ExportEngine.save(
+                        this.canvas
+                    );
 
-        area.addEventListener("dragleave", () => {
-
-            area.style.borderColor = "#555";
-
-        });
-
-        area.addEventListener("drop", async (e) => {
-
-            e.preventDefault();
-
-            area.style.borderColor = "#555";
-
-            const file = e.dataTransfer.files[0];
-
-            if (!file) return;
-
-            await this.process(file);
-
-        });
+                }
+            );
 
     },
 
-    async process(file) {
+    //--------------------------------------------------
+
+    async loadImage(file) {
+
+        if (!file)
+            return;
+
+        UI.loading(true);
 
         try {
 
-            UI.showLoading("Loading Scan...");
-
-            await ImageEngine.load(file);
-
-            UI.progress(20);
-
-            UI.showLoading("Generating Preset...");
-
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            PresetEngine.apply(
-                ImageEngine.canvas,
-                ImageEngine.ctx
+            await ImageEngine.load(
+                file,
+                this.canvas
             );
 
-            UI.progress(100);
+            this.originalImage = file;
 
-            UI.hideLoading();
+            UI.status(
+                "Image Loaded"
+            );
 
-            UI.toast("Preset berhasil diterapkan");
+            //----------------------------------
+            // Auto Generate
+            //----------------------------------
 
-            UI.status("Ready");
+            await this.generate();
 
         }
 
@@ -108,46 +138,107 @@ const App = {
 
             console.error(err);
 
-            UI.hideLoading();
-
-            UI.toast("Gagal memproses gambar");
+            UI.status(
+                "Failed Loading Image"
+            );
 
         }
+
+        UI.loading(false);
 
     },
 
-    bindExport() {
+    //--------------------------------------------------
 
-        const jpg = document.getElementById("export");
+    async generate() {
 
-        if (jpg) {
+        if (!this.canvas.width)
+            return;
 
-            jpg.addEventListener("click", () => {
+        UI.loading(true);
 
-                ExportManager.jpg(ImageEngine.canvas);
+        UI.status(
+            "Processing..."
+        );
 
-            });
+        try {
+
+            const start =
+                performance.now();
+
+            //----------------------------------
+
+            await FilmEngine.process(
+                this.canvas
+            );
+
+            //----------------------------------
+
+            const end =
+                performance.now();
+
+            console.log(
+
+                "Finished",
+
+                (end - start).toFixed(1),
+
+                "ms"
+
+            );
+
+            this.processed = true;
+
+            UI.status(
+                "Preset Applied"
+            );
 
         }
 
-        const png = document.getElementById("exportPNG");
+        catch (err) {
 
-        if (png) {
+            console.error(err);
 
-            png.addEventListener("click", () => {
-
-                ExportManager.png(ImageEngine.canvas);
-
-            });
+            UI.status(
+                "Processing Error"
+            );
 
         }
+
+        UI.loading(false);
+
+    },
+
+    //--------------------------------------------------
+
+    reset() {
+
+        if (!this.originalImage)
+            return;
+
+        ImageEngine.load(
+            this.originalImage,
+            this.canvas
+        );
+
+        this.processed = false;
+
+        UI.status(
+            "Reset"
+        );
 
     }
 
 };
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener(
 
-    App.init();
+    "DOMContentLoaded",
 
-});
+    () => {
+
+        App.init();
+
+    }
+
+);
