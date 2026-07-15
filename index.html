@@ -3,12 +3,15 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>FilmHD</title>
+<title>Film Scan Studio</title>
+
+<meta name="theme-color" content="#111111">
 
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="assets/logo.png">
+
+<link rel="icon" href="assets/icon-192.png">
 
 <link rel="stylesheet" href="css/style.css">
 
@@ -16,374 +19,66 @@
 
 <body>
 
-<div id="app">
+<header>
 
-    <!-- =========================
-         SIDEBAR
-    ========================== -->
+<img src="assets/logo.png" class="logo">
 
-    <aside class="sidebar">
+<h1>Film Scan Studio</h1>
 
-        <div class="logo">
+<p>Scan Klise Processor</p>
 
-            <h1>FilmHD</h1>
+</header>
 
-            <span>Analog Film Converter</span>
+<main>
 
-        </div>
+<section class="upload">
 
+<input
+type="file"
+id="upload"
+accept="image/*">
 
+</section>
 
-        <!-- Upload -->
+<section>
 
-        <div class="card">
+<canvas id="canvas"></canvas>
 
-            <label class="section-title">
+</section>
 
-                Upload Negative
+<section class="buttons">
 
-            </label>
+<button id="generate">
 
-            <input
-            type="file"
-            id="fileInput"
-            accept="image/*">
+Generate Preset
 
-        </div>
+</button>
 
+<button id="export">
 
+Export JPG
 
-        <!-- AUTO PRESET -->
+</button>
 
-        <div class="card">
+</section>
 
-            <button id="btnAutoPreset">
+</main>
 
-                AUTO PRESET
-
-            </button>
-
-        </div>
-
-
-
-        <!-- Preset -->
-
-        <div class="card">
-
-            <label class="section-title">
-
-                Film Preset
-
-            </label>
-
-            <select id="preset">
-
-                <option value="auto">
-                    Auto (BogellProject)
-                </option>
-
-                <option value="kodak_gold">
-                    Kodak Gold
-                </option>
-
-                <option value="portra">
-                    Kodak Portra
-                </option>
-
-                <option value="ultramax">
-                    Kodak Ultramax
-                </option>
-
-                <option value="fuji_c200">
-                    Fuji C200
-                </option>
-
-                <option value="superia">
-                    Fuji Superia
-                </option>
-
-                <option value="pro400h">
-                    Fuji Pro400H
-                </option>
-
-                <option value="hp5">
-                    Ilford HP5
-                </option>
-
-            </select>
-
-        </div>
-
-
-
-        <!-- Exposure -->
-
-        <div class="card">
-
-            <label>
-
-                Exposure
-
-            </label>
-
-            <input
-            type="range"
-            id="exposure"
-            min="-100"
-            max="100"
-            value="0">
-
-        </div>
-
-
-
-        <!-- Contrast -->
-
-        <div class="card">
-
-            <label>
-
-                Contrast
-
-            </label>
-
-            <input
-            type="range"
-            id="contrast"
-            min="-100"
-            max="100"
-            value="0">
-
-        </div>
-
-
-
-        <!-- White Balance -->
-
-        <div class="card">
-
-            <label>
-
-                White Balance
-
-            </label>
-
-            <input
-            type="range"
-            id="temperature"
-            min="-100"
-            max="100"
-            value="0">
-
-        </div>
-
-
-
-        <!-- Saturation -->
-
-        <div class="card">
-
-            <label>
-
-                Saturation
-
-            </label>
-
-            <input
-            type="range"
-            id="saturation"
-            min="-100"
-            max="100"
-            value="0">
-
-        </div>
-
-
-
-        <!-- Highlights -->
-
-        <div class="card">
-
-            <label>
-
-                Highlights
-
-            </label>
-
-            <input
-            type="range"
-            id="highlights"
-            min="-100"
-            max="100"
-            value="0">
-
-        </div>
-
-
-
-        <!-- Shadows -->
-
-        <div class="card">
-
-            <label>
-
-                Shadows
-
-            </label>
-
-            <input
-            type="range"
-            id="shadows"
-            min="-100"
-            max="100"
-            value="0">
-
-        </div>
-
-
-
-        <!-- Blacks -->
-
-        <div class="card">
-
-            <label>
-
-                Blacks
-
-            </label>
-
-            <input
-            type="range"
-            id="blacks"
-            min="-100"
-            max="100"
-            value="0">
-
-        </div>
-
-
-
-        <!-- Whites -->
-
-        <div class="card">
-
-            <label>
-
-                Whites
-
-            </label>
-
-            <input
-            type="range"
-            id="whites"
-            min="-100"
-            max="100"
-            value="0">
-
-        </div>
-
-
-
-        <!-- Buttons -->
-
-        <div class="card buttons">
-
-            <button id="btnReset">
-
-                Reset
-
-            </button>
-
-            <button id="btnSave">
-
-                Save JPEG
-
-            </button>
-
-        </div>
-
-    </aside>
-
-
-
-    <!-- ======================
-         MAIN
-    ======================= -->
-
-    <main class="viewer">
-
-        <!-- Toolbar -->
-
-        <div class="toolbar">
-
-            <button id="zoomOut">−</button>
-
-            <button id="zoomFit">Fit</button>
-
-            <button id="zoomIn">+</button>
-
-            <span id="zoomValue">
-
-                100%
-
-            </span>
-
-        </div>
-
-
-
-        <!-- Canvas -->
-
-        <div id="canvasContainer">
-
-            <canvas id="canvas"></canvas>
-
-        </div>
-
-
-
-        <!-- Before After -->
-
-        <div class="compare">
-
-            <label>
-
-                Before / After
-
-            </label>
-
-            <input
-            type="range"
-            id="compare"
-            min="0"
-            max="100"
-            value="100">
-
-        </div>
-
-
-
-        <!-- Histogram -->
-
-        <div class="histogram">
-
-            <canvas id="histogramCanvas">
-
-            </canvas>
-
-        </div>
-
-    </main>
-
-</div>
-
-
-
-<script src="js/converter.js"></script>
-<script src="js/enhance.js"></script>
-<script src="js/preset.js"></script>
+<script src="js/image-engine.js"></script>
+<script src="js/preset-engine.js"></script>
+<script src="js/export.js"></script>
+<script src="js/ui.js"></script>
 <script src="js/app.js"></script>
+
+<script>
+
+if("serviceWorker" in navigator){
+
+navigator.serviceWorker.register("service-worker.js");
+
+}
+
+</script>
 
 </body>
 </html>
