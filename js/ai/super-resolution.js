@@ -1,9 +1,8 @@
 /*
 =========================================================
 Film Scan Studio
-AI Super Resolution Engine
-Version 1.0
-AppDIGI
+Real AI Super Resolution
+Version 2.0
 =========================================================
 */
 
@@ -11,86 +10,74 @@ AppDIGI
 const SuperResolution = {
 
 
-    scale:2,
+
+async enhance(canvas){
 
 
-    async enhance(canvas){
+    console.log(
+        "Real AI Upscale Start"
+    );
 
 
-        console.log(
-            "AI Super Resolution Started..."
+
+    const model =
+        await AIModel.load();
+
+
+
+    const tensor =
+        tf.browser.fromPixels(
+            canvas
+        )
+        .expandDims(0)
+        .div(255);
+
+
+
+    const result =
+        await model.executeAsync(
+            tensor
         );
 
 
 
-        const width =
-            canvas.width;
+    const output =
+        result
+        .squeeze();
 
 
 
-        const height =
-            canvas.height;
-
-
-
-        const output =
-            document.createElement(
-                "canvas"
-            );
-
-
-        output.width =
-            width * this.scale;
-
-
-        output.height =
-            height * this.scale;
-
-
-
-        const ctx =
-            output.getContext(
-                "2d"
-            );
-
-
-
-        ctx.imageSmoothingEnabled =
-            true;
-
-
-        ctx.imageSmoothingQuality =
-            "high";
-
-
-
-        ctx.drawImage(
-            canvas,
-            0,
-            0,
-            output.width,
-            output.height
+    const outCanvas =
+        document.createElement(
+            "canvas"
         );
 
 
 
-        console.log(
-            "Upscale:",
-            width,
-            "x",
-            height,
-            "→",
-            output.width,
-            "x",
-            output.height
-        );
+    await tf.browser.toPixels(
+        output,
+        outCanvas
+    );
 
 
 
-        return output;
+    tensor.dispose();
 
 
-    }
+    output.dispose();
+
+
+
+    console.log(
+        "AI Upscale Finished"
+    );
+
+
+
+    return outCanvas;
+
+
+}
 
 
 
@@ -99,10 +86,9 @@ const SuperResolution = {
 
 
 window.SuperResolution =
-    SuperResolution;
-
+SuperResolution;
 
 
 console.log(
-"AI Super Resolution Loaded"
+"Real AI Super Resolution Loaded"
 );
