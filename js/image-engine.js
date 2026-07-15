@@ -1,84 +1,70 @@
 /*
-=========================================
+=========================================================
 Film Scan Studio
 Image Engine
-Version 1.0
-=========================================
+Version 2.0
+AppDIGI
+=========================================================
 */
 
 const ImageEngine = {
 
     canvas: null,
+
     ctx: null,
 
     image: null,
 
-    scale: 1,
+    //--------------------------------------------------
 
-    rotation: 0,
-
-    flipX: false,
-
-    flipY: false,
-
-    init(canvas) {
+    init(canvas){
 
         this.canvas = canvas;
 
         this.ctx = canvas.getContext(
             "2d",
             {
-                willReadFrequently: true
+                willReadFrequently:true
             }
         );
 
-        console.log("Image Engine Ready");
-
     },
 
-    load(file) {
+    //--------------------------------------------------
 
-        return new Promise((resolve, reject) => {
+    load(file,canvas){
 
-            if (!file) {
+        return new Promise((resolve,reject)=>{
 
-                reject("File kosong");
+            if(!this.canvas){
 
-                return;
+                this.init(canvas);
 
             }
 
-            const reader = new FileReader();
+            const reader=new FileReader();
 
-            reader.onload = () => {
+            reader.onload=(e)=>{
 
-                const img = new Image();
+                const img=new Image();
 
-                img.onload = () => {
+                img.onload=()=>{
 
-                    this.image = img;
+                    this.image=img;
 
-                    this.scale = 1;
-
-                    this.rotation = 0;
-
-                    this.flipX = false;
-
-                    this.flipY = false;
-
-                    this.fit();
+                    this.draw(img);
 
                     resolve(img);
 
                 };
 
-                img.onerror = reject;
+                img.onerror=reject;
 
-                img.src = reader.result;
+                img.src=e.target.result;
 
             };
 
-            reader.onerror = reject;
+            reader.onerror=reject;
 
             reader.readAsDataURL(file);
 
@@ -86,153 +72,90 @@ const ImageEngine = {
 
     },
 
-    fit() {
+    //--------------------------------------------------
 
-        if (!this.image) return;
+    draw(img){
 
-        this.canvas.width = this.image.width;
+        const maxWidth=2500;
 
-        this.canvas.height = this.image.height;
+        const maxHeight=2500;
 
-        this.render();
+        let w=img.width;
 
-    },
+        let h=img.height;
 
-    render() {
+        //--------------------------------------
+        // Resize jika terlalu besar
+        //--------------------------------------
 
-        if (!this.image) return;
+        if(w>maxWidth){
 
-        const w = this.canvas.width;
+            h*=maxWidth/w;
 
-        const h = this.canvas.height;
-
-        this.ctx.clearRect(0, 0, w, h);
-
-        this.ctx.save();
-
-        this.ctx.translate(w / 2, h / 2);
-
-        this.ctx.rotate(this.rotation * Math.PI / 180);
-
-        this.ctx.scale(
-
-            this.flipX ? -this.scale : this.scale,
-
-            this.flipY ? -this.scale : this.scale
-
-        );
-
-        this.ctx.drawImage(
-
-            this.image,
-
-            -this.image.width / 2,
-
-            -this.image.height / 2
-
-        );
-
-        this.ctx.restore();
-
-    },
-
-    zoomIn() {
-
-        this.scale += 0.10;
-
-        this.render();
-
-    },
-
-    zoomOut() {
-
-        this.scale -= 0.10;
-
-        if (this.scale < 0.1) {
-
-            this.scale = 0.1;
+            w=maxWidth;
 
         }
 
-        this.render();
+        if(h>maxHeight){
 
-    },
+            w*=maxHeight/h;
 
-    rotateLeft() {
+            h=maxHeight;
 
-        this.rotation -= 90;
+        }
 
-        this.render();
+        this.canvas.width=w;
 
-    },
+        this.canvas.height=h;
 
-    rotateRight() {
-
-        this.rotation += 90;
-
-        this.render();
-
-    },
-
-    flipHorizontal() {
-
-        this.flipX = !this.flipX;
-
-        this.render();
-
-    },
-
-    flipVertical() {
-
-        this.flipY = !this.flipY;
-
-        this.render();
-
-    },
-
-    reset() {
-
-        this.scale = 1;
-
-        this.rotation = 0;
-
-        this.flipX = false;
-
-        this.flipY = false;
-
-        this.render();
-
-    },
-
-    resize(maxWidth = 4000) {
-
-        if (!this.image) return;
-
-        if (this.image.width <= maxWidth) return;
-
-        const ratio = this.image.height / this.image.width;
-
-        this.canvas.width = maxWidth;
-
-        this.canvas.height = maxWidth * ratio;
+        this.ctx.clearRect(
+            0,
+            0,
+            w,
+            h
+        );
 
         this.ctx.drawImage(
-
-            this.image,
-
+            img,
             0,
-
             0,
+            w,
+            h
+        );
 
-            this.canvas.width,
+        console.log(
 
-            this.canvas.height
+            "Image Loaded",
+
+            w,
+
+            "x",
+
+            h
 
         );
 
     },
 
-    getImageData() {
+    //--------------------------------------------------
+
+    getCanvas(){
+
+        return this.canvas;
+
+    },
+
+    //--------------------------------------------------
+
+    getContext(){
+
+        return this.ctx;
+
+    },
+
+    //--------------------------------------------------
+
+    getImageData(){
 
         return this.ctx.getImageData(
 
@@ -248,19 +171,61 @@ const ImageEngine = {
 
     },
 
-    putImageData(data) {
+    //--------------------------------------------------
 
-        this.ctx.putImageData(data, 0, 0);
+    putImageData(image){
+
+        this.ctx.putImageData(
+
+            image,
+
+            0,
+
+            0
+
+        );
 
     },
 
-    getCanvas() {
+    //--------------------------------------------------
 
-        return this.canvas;
+    clone(){
+
+        const image=
+
+            this.getImageData();
+
+        return new ImageData(
+
+            new Uint8ClampedArray(
+
+                image.data
+
+            ),
+
+            image.width,
+
+            image.height
+
+        );
 
     },
 
-    clear() {
+    //--------------------------------------------------
+
+    reset(){
+
+        if(this.image){
+
+            this.draw(this.image);
+
+        }
+
+    },
+
+    //--------------------------------------------------
+
+    clear(){
 
         this.ctx.clearRect(
 
@@ -271,6 +236,30 @@ const ImageEngine = {
             this.canvas.width,
 
             this.canvas.height
+
+        );
+
+    },
+
+    //--------------------------------------------------
+
+    async process(){
+
+        if(!this.canvas){
+
+            console.warn(
+
+                "Canvas belum tersedia"
+
+            );
+
+            return;
+
+        }
+
+        await FilmEngine.process(
+
+            this.canvas
 
         );
 
