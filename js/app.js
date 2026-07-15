@@ -2,7 +2,7 @@
 =========================================================
 Film Scan Studio
 App Controller
-Version 2.2 HD
+Version 2.3 Multi Pass
 AppDIGI
 =========================================================
 */
@@ -14,6 +14,8 @@ const App = {
     canvas:null,
 
     ctx:null,
+
+    generateCount:0,
 
 
 
@@ -37,16 +39,16 @@ const App = {
 
 
         this.canvas =
-            document.getElementById(
-                "preview"
-            );
+        document.getElementById(
+            "preview"
+        );
 
 
 
         if(!this.canvas){
 
             console.error(
-                "Canvas #preview tidak ditemukan"
+                "Canvas preview tidak ditemukan"
             );
 
             return;
@@ -55,14 +57,13 @@ const App = {
 
 
 
-
         this.ctx =
-            this.canvas.getContext(
-                "2d",
-                {
-                    willReadFrequently:true
-                }
-            );
+        this.canvas.getContext(
+            "2d",
+            {
+                willReadFrequently:true
+            }
+        );
 
 
 
@@ -91,7 +92,6 @@ const App = {
         );
 
 
-
     },
 
 
@@ -103,29 +103,28 @@ const App = {
     bindEvents(){
 
 
-
         const upload =
-            document.getElementById(
-                "upload"
-            );
+        document.getElementById(
+            "upload"
+        );
 
 
         const generate =
-            document.getElementById(
-                "generate"
-            );
+        document.getElementById(
+            "generate"
+        );
 
 
         const reset =
-            document.getElementById(
-                "reset"
-            );
+        document.getElementById(
+            "reset"
+        );
 
 
         const exportBtn =
-            document.getElementById(
-                "export"
-            );
+        document.getElementById(
+            "export"
+        );
 
 
 
@@ -139,17 +138,13 @@ const App = {
                 async e=>{
 
 
-                    const file =
-                        e.target.files[0];
-
-
-                    if(!file)
+                    if(!e.target.files.length)
                         return;
 
 
 
                     await this.loadImage(
-                        file
+                        e.target.files[0]
                     );
 
 
@@ -184,7 +179,6 @@ const App = {
 
 
 
-
         if(reset){
 
 
@@ -196,8 +190,11 @@ const App = {
                     ImageEngine.reset();
 
 
+                    this.generateCount = 0;
+
+
                     UI.status(
-                        "Image Reset"
+                        "Reset"
                     );
 
 
@@ -206,7 +203,6 @@ const App = {
 
 
         }
-
 
 
 
@@ -233,8 +229,8 @@ const App = {
         }
 
 
-
     },
+
 
 
 
@@ -249,9 +245,7 @@ const App = {
         try{
 
 
-            UI.loading(
-                true
-            );
+            UI.loading(true);
 
 
             UI.status(
@@ -259,22 +253,14 @@ const App = {
             );
 
 
-            UI.progress(
-                5
-            );
 
+            this.generateCount = 0;
 
 
 
             await ImageEngine.load(
                 file,
                 this.canvas
-            );
-
-
-
-            UI.progress(
-                30
             );
 
 
@@ -291,7 +277,7 @@ const App = {
 
 
 
-            // Auto process
+            // otomatis generate pertama
 
             await this.generate();
 
@@ -303,13 +289,11 @@ const App = {
         catch(err){
 
 
-            console.error(
-                err
-            );
+            console.error(err);
 
 
             UI.toast(
-                "Failed loading image"
+                "Failed Loading Image"
             );
 
 
@@ -317,10 +301,7 @@ const App = {
 
 
 
-        UI.loading(
-            false
-        );
-
+        UI.loading(false);
 
 
     },
@@ -340,63 +321,141 @@ const App = {
         try{
 
 
-            UI.loading(
-                true
+            this.generateCount++;
+
+
+
+            console.log(
+                "Generate Pass:",
+                this.generateCount
             );
 
 
 
-            UI.status(
-                "Applying Film Preset..."
-            );
-
-
-
-            UI.progress(
-                40
-            );
+            UI.loading(true);
 
 
 
             const start =
-                performance.now();
+            performance.now();
 
 
 
 
 
-            //----------------------------------
-            // Film Processing
-            //----------------------------------
+            //================================================
+            // PASS 1
+            // FILM RESTORATION
+            //================================================
 
 
-            await FilmEngine.process(
-                this.canvas
-            );
+            if(this.generateCount === 1){
 
-
-            //----------------------------------
-            // Super Resolution
-            //----------------------------------
-
-
-            if(
-                window.SuperResolution
-            ){
 
 
                 UI.status(
-                    "AI Upscaling..."
+                    "Applying Film Preset..."
                 );
 
 
                 UI.progress(
-                    80
+                    40
                 );
 
 
 
-                const hd =
+                await FilmEngine.process(
+                    this.canvas
+                );
+
+
+
+            }
+
+
+
+
+
+            //================================================
+            // PASS 2
+            // HD RESTORATION
+            //================================================
+
+
+            else{
+
+
+                console.log(
+                    "Running HD Enhancement Pass"
+                );
+
+
+
+                UI.status(
+                    "AI Restoring Detail..."
+                );
+
+
+
+                UI.progress(
+                    60
+                );
+
+
+
+
+
+                if(window.DetailEnhance){
+
+
+
+                    let image =
+                    ImageEngine.getImageData();
+
+
+
+                    image =
+                    DetailEnhance.apply(
+                        image
+                    );
+
+
+
+                    if(image){
+
+
+                        ImageEngine.putImageData(
+                            image
+                        );
+
+
+                    }
+
+
+                }
+
+
+
+
+
+
+                if(window.SuperResolution){
+
+
+
+                    UI.status(
+                        "AI Upscaling..."
+                    );
+
+
+
+                    UI.progress(
+                        80
+                    );
+
+
+
+                    const hd =
                     await SuperResolution.enhance(
                         this.canvas
                     );
@@ -404,40 +463,43 @@ const App = {
 
 
 
-                this.canvas.width =
+                    this.canvas.width =
                     hd.width;
 
 
 
-                this.canvas.height =
+                    this.canvas.height =
                     hd.height;
 
 
 
 
-                const ctx =
+                    const ctx =
                     this.canvas.getContext(
                         "2d"
                     );
 
 
 
-                ctx.drawImage(
-                    hd,
-                    0,
-                    0
-                );
+                    ctx.drawImage(
+                        hd,
+                        0,
+                        0
+                    );
 
 
 
-                console.log(
+                    console.log(
 
-                    "Super Resolution Applied:",
-                    hd.width,
-                    "x",
-                    hd.height
+                        "HD Result:",
+                        hd.width,
+                        "x",
+                        hd.height
 
-                );
+                    );
+
+
+                }
 
 
 
@@ -449,30 +511,24 @@ const App = {
 
 
 
-
             const end =
-                performance.now();
-
+            performance.now();
 
 
 
             console.log(
 
                 "Finished",
-
                 (end-start).toFixed(0),
-
                 "ms"
 
             );
 
 
 
-
             UI.progress(
                 100
             );
-
 
 
             UI.status(
@@ -482,7 +538,7 @@ const App = {
 
 
             UI.toast(
-                "HD Film Preset Applied"
+                "Preset Finished"
             );
 
 
@@ -514,15 +570,10 @@ const App = {
 
 
 
-        UI.loading(
-            false
-        );
-
+        UI.loading(false);
 
 
     },
-
-
 
 
 
@@ -538,7 +589,7 @@ const App = {
         if(
             !("serviceWorker" in navigator)
         )
-            return;
+        return;
 
 
 
@@ -573,7 +624,6 @@ const App = {
     }
 
 
-
 };
 
 
@@ -581,23 +631,17 @@ const App = {
 
 
 window.App =
-    App;
-
+App;
 
 
 
 
 
 window.addEventListener(
+"load",
+()=>{
 
-    "load",
+    App.init();
 
-    ()=>{
-
-
-        App.init();
-
-
-    }
-
+}
 );
