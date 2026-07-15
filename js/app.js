@@ -174,60 +174,190 @@ const App = {
 
     },
 
-    //--------------------------------------------------
+   //--------------------------------------------------
 
-    async generate() {
+async generate() {
 
-        try {
+    try {
 
-            UI.loading(true);
+        UI.loading(true);
 
-            UI.status("Applying Film Preset...");
+        UI.status(
+            "Applying Film Preset..."
+        );
 
-            UI.progress(40);
+        UI.progress(40);
 
-            const start =
-                performance.now();
 
-            await FilmEngine.process(
-                this.canvas
+
+        const start =
+            performance.now();
+
+
+
+        // ===============================
+        // FILM PROCESSING
+        // ===============================
+
+        await FilmEngine.process(
+            this.canvas
+        );
+
+
+
+        // ===============================
+        // AI SUPER RESOLUTION
+        // ===============================
+
+        if(
+            window.SuperResolution
+        ){
+
+            UI.status(
+                "Enhancing HD Detail..."
             );
 
-            const end =
-                performance.now();
+
+            UI.progress(80);
+
+
+
+            const hd =
+                await SuperResolution.enhance(
+                    this.canvas
+                );
+
+
+
+            this.canvas.width =
+                hd.width;
+
+
+
+            this.canvas.height =
+                hd.height;
+
+
+
+            const ctx =
+                this.canvas.getContext(
+                    "2d"
+                );
+
+
+            ctx.drawImage(
+                hd,
+                0,
+                0
+            );
+
+
 
             console.log(
-
-                "Finished",
-
-                (end - start).toFixed(0),
-
-                "ms"
-
+                "Super Resolution Applied:",
+                hd.width,
+                "x",
+                hd.height
             );
 
-            UI.progress(100);
-
-            UI.status("Finished");
-
-            UI.toast("Preset Applied");
-
-            UI.enableExport(true);
 
         }
 
-        catch (err) {
 
-            console.error(err);
 
-            UI.toast("Generate Failed");
 
-        }
 
-        UI.loading(false);
+        const end =
+            performance.now();
 
-    },
 
+
+        console.log(
+
+            "Finished",
+
+            (end - start).toFixed(0),
+
+            "ms"
+
+        );
+
+
+
+        UI.progress(
+            100
+        );
+
+
+        UI.status(
+            "Finished"
+        );
+
+
+        UI.toast(
+            "HD Film Preset Applied"
+        );
+
+
+        UI.enableExport(
+            true
+        );
+
+
+
+    }
+
+
+    catch(err){
+
+
+        console.error(
+            err
+        );
+
+
+        UI.toast(
+            "Generate Failed"
+        );
+
+
+    }
+
+
+
+    UI.loading(
+        false
+    );
+
+
+},
+if(window.SuperResolution){
+
+
+    const hd =
+        await SuperResolution.enhance(
+            this.canvas
+        );
+
+
+    this.canvas.width =
+        hd.width;
+
+
+    this.canvas.height =
+        hd.height;
+
+
+    this.canvas
+        .getContext("2d")
+        .drawImage(
+            hd,
+            0,
+            0
+        );
+
+
+}
     //--------------------------------------------------
 
     registerServiceWorker() {
