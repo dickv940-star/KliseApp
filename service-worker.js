@@ -1,6 +1,6 @@
-const CACHE = "FilmHD-v1";
+const CACHE="film-scan-v1";
 
-const FILES = [
+const FILES=[
 
 "./",
 
@@ -10,59 +10,55 @@ const FILES = [
 
 "./css/style.css",
 
-"./js/app.js"
+"./js/app.js",
+
+"./js/ui.js",
+
+"./js/image-engine.js",
+
+"./js/preset-engine.js",
+
+"./js/export.js",
+
+"./assets/logo.png",
+
+"./assets/icon-192.png",
+
+"./assets/icon-512.png"
 
 ];
 
-self.addEventListener("install", event => {
+self.addEventListener("install",e=>{
 
-event.waitUntil(
+e.waitUntil(
 
 caches.open(CACHE)
 
-.then(cache => cache.addAll(FILES))
+.then(cache=>cache.addAll(FILES))
 
 );
 
 });
 
-self.addEventListener("activate", event => {
+self.addEventListener("activate",e=>{
 
-event.waitUntil(
+e.waitUntil(
 
-caches.keys()
-
-.then(keys =>
-
-Promise.all(
-
-keys.map(key => {
-
-if(key !== CACHE){
-
-return caches.delete(key);
-
-}
-
-})
-
-)
-
-)
+self.clients.claim()
 
 );
 
 });
 
-self.addEventListener("fetch", event => {
+self.addEventListener("fetch",e=>{
 
-event.respondWith(
+e.respondWith(
 
-caches.match(event.request)
+caches.match(e.request)
 
-.then(response => {
+.then(res=>{
 
-return response || fetch(event.request);
+return res || fetch(e.request);
 
 })
 
