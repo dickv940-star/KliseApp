@@ -154,7 +154,12 @@ const FilmEngine = {
             canvas,
             ctx
         );
-
+        
+this.runStep(
+    DetailEnhance,
+    canvas,
+     ctx
+);
         this.runStep(
             Sharpen,
             canvas,
