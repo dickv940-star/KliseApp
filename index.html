@@ -3,139 +3,279 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width,initial-scale=1">
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0">
 
-    <title>Film Scan Studio</title>
+<title>Film Scan Studio</title>
 
-    <meta name="theme-color"
-          content="#111111">
+<meta
+    name="theme-color"
+    content="#6C63FF">
 
-    <meta name="description"
-          content="Film Scan Studio - Scan Klise Processor">
+<meta
+    name="description"
+    content="Film Scan Studio - AI Negative Scanner">
 
-    <link rel="manifest"
-          href="manifest.json">
+<link
+    rel="manifest"
+    href="manifest.json">
 
-    <link rel="icon"
-          href="assets/icon-192.png">
+<link
+    rel="icon"
+    href="assets/icon-192.png">
 
-    <link rel="apple-touch-icon"
-          href="assets/icon-192.png">
+<link
+    rel="apple-touch-icon"
+    href="assets/icon-192.png">
 
-    <link rel="stylesheet"
-          href="css/style.css">
+<link
+    rel="stylesheet"
+    href="style.css">
 
 </head>
 
 <body>
 
+<!-- ======================================= -->
+
+<div id="loading">
+
+    <div class="loader"></div>
+
+</div>
+
+<!-- ======================================= -->
+
+<div class="container">
+
 <header>
 
-    <img src="assets/logo.png"
-         class="logo"
-         alt="Logo">
+<h1>
 
-    <h1>Film Scan Studio</h1>
+🎞 Film Scan Studio
 
-    <p>Scan Klise Processor</p>
+</h1>
+
+<p>
+
+AI Negative Film Scanner
+
+</p>
 
 </header>
 
-<main>
+<!-- ======================================= -->
 
-    <!-- Upload -->
+<div class="card fade">
 
-    <section class="upload">
+<div id="dropArea">
 
-        <h2>Upload Scan Klise</h2>
+<h2>
 
-        <p>
+Upload Scan Klise
 
-            Klik atau drag & drop foto hasil scan.
+</h2>
 
-            Setelah upload selesai,
+<br>
 
-            preset akan diterapkan secara otomatis.
+<p>
 
-        </p>
+Klik atau Drag & Drop
 
-        <input
-            id="upload"
-            type="file"
-            accept="image/*">
+</p>
 
-    </section>
+<br>
 
-    <!-- Canvas -->
+<input
 
-    <section>
+id="upload"
 
-        <canvas id="canvas"></canvas>
+type="file"
 
-    </section>
+accept="image/*">
 
-    <!-- Export -->
+</div>
 
-    <section class="buttons">
+</div>
 
-        <button id="export">
+<!-- ======================================= -->
 
-            Export JPG
+<div class="card fade">
 
-        </button>
+<h2>
 
-        <button id="exportPNG">
+Preview
 
-            Export PNG
+</h2>
 
-        </button>
+<br>
 
-    </section>
+<canvas
 
-</main>
+id="preview">
+
+</canvas>
+
+</div>
+
+<!-- ======================================= -->
+
+<div class="card fade">
+
+<h3>
+
+Processing
+
+</h3>
+
+<div class="progress">
+
+<div id="progress"></div>
+
+</div>
+
+<div id="progressText">
+
+0%
+
+</div>
+
+<div id="status">
+
+Ready
+
+</div>
+
+</div>
+
+<!-- ======================================= -->
+
+<div class="card fade">
+
+<h3>
+
+Pipeline
+
+</h3>
+
+<br>
+
+<ul id="pipeline">
+
+<li>✅ Detector</li>
+
+<li>✅ Orange Mask</li>
+
+<li>✅ Invert</li>
+
+<li>✅ White Balance</li>
+
+<li>✅ Levels</li>
+
+<li>✅ Tone Curve</li>
+
+<li>✅ Dehaze</li>
+
+<li>✅ Vibrance</li>
+
+<li>✅ Saturation</li>
+
+<li>✅ Bogell Inspired</li>
+
+<li>✅ Noise Reduction</li>
+
+<li>✅ Sharpen</li>
+
+<li>✅ Film Grain</li>
+
+</ul>
+
+</div>
+
+<!-- ======================================= -->
+
+<div class="button-group">
+
+<button id="generate">
+
+Generate Preset
+
+</button>
+
+<button id="reset">
+
+Reset
+
+</button>
+
+<button id="export">
+
+Export JPG
+
+</button>
+
+</div>
 
 <footer>
 
-    Film Scan Studio
+Film Scan Studio
 
-    © 2026
+<br>
+
+Powered by AppDIGI
 
 </footer>
 
-<script src="js/image-engine.js"></script>
+</div>
 
-<script src="js/preset-engine.js"></script>
+<div id="toast"></div>
 
-<script src="js/export.js"></script>
+<!-- ======================================= -->
+<!-- Core -->
 
 <script src="js/ui.js"></script>
 
+<script src="js/image-engine.js"></script>
+
+<script src="js/export.js"></script>
+
+<!-- ======================================= -->
+<!-- Film Engine -->
+
+<script src="js/film/detector.js"></script>
+
+<script src="js/film/orange-mask.js"></script>
+
+<script src="js/film/invert.js"></script>
+
+<script src="js/film/whitebalance.js"></script>
+
+<script src="js/film/levels.js"></script>
+
+<script src="js/film/tonecurve.js"></script>
+
+<script src="js/film/dehaze.js"></script>
+
+<script src="js/film/vibrance.js"></script>
+
+<script src="js/film/saturation.js"></script>
+
+<script src="js/film/bogell.js"></script>
+
+<script src="js/film/noise.js"></script>
+
+<script src="js/film/sharpen.js"></script>
+
+<script src="js/film/grain.js"></script>
+
+<script src="js/film/engine.js"></script>
+
+<!-- ======================================= -->
+
 <script src="js/app.js"></script>
-
-<script>
-
-if("serviceWorker" in navigator){
-
-    window.addEventListener("load",()=>{
-
-        navigator.serviceWorker.register("./service-worker.js")
-
-        .then(()=>{
-
-            console.log("Service Worker Registered");
-
-        })
-
-        .catch(console.error);
-
-    });
-
-}
-
-</script>
 
 </body>
 
