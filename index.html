@@ -5,23 +5,18 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>Film Scan Studio</title>
 
-<meta name="theme-color"
-content="#6C63FF">
+<meta name="theme-color" content="#6C63FF">
 
-<meta
-name="description"
+<meta name="description"
 content="AI Film Negative Scanner">
 
-<link rel="manifest"
-href="manifest.json">
+<link rel="manifest" href="manifest.json">
 
-<link rel="icon"
-href="assets/icon-192.png">
+<link rel="icon" href="assets/icon-192.png">
 
 <link rel="apple-touch-icon"
 href="assets/icon-192.png">
@@ -32,6 +27,8 @@ href="assets/icon-192.png">
 
 <body>
 
+<!-- Loading -->
+
 <div id="loading">
 
 <div class="loader"></div>
@@ -40,24 +37,32 @@ href="assets/icon-192.png">
 
 <div class="container">
 
+<!-- ================================================= -->
+
 <header>
+
+<div class="logo-box">
 
 <img
 src="assets/logo.png"
 class="logo"
-alt="Logo">
+alt="Film Scan Studio">
+
+</div>
 
 <h1>Film Scan Studio</h1>
 
-<p>AI Negative Film Scanner</p>
+<p>AI Film Negative Scanner</p>
 
 </header>
 
+<!-- ================================================= -->
+
 <main>
 
-<!-- Upload -->
+<!-- ================= Upload ================= -->
 
-<section class="card">
+<section class="card fade">
 
 <div id="dropArea">
 
@@ -65,7 +70,7 @@ alt="Logo">
 
 <p>
 
-Drag & Drop atau klik di sini
+Drag & Drop atau klik tombol di bawah
 
 </p>
 
@@ -75,10 +80,9 @@ type="file"
 accept="image/*"
 hidden>
 
-<button
-id="browse">
+<button id="browse">
 
-Pilih Foto
+📷 Pilih Foto
 
 </button>
 
@@ -86,9 +90,9 @@ Pilih Foto
 
 </section>
 
-<!-- Preview -->
+<!-- ================= Preview ================= -->
 
-<section class="card">
+<section class="card fade">
 
 <h2>Preview</h2>
 
@@ -96,9 +100,9 @@ Pilih Foto
 
 </section>
 
-<!-- Status -->
+<!-- ================= Status ================= -->
 
-<section class="card">
+<section class="card fade">
 
 <h3>Status</h3>
 
@@ -122,56 +126,34 @@ Ready
 
 </section>
 
-<!-- Tombol -->
+<!-- ================= Film Preset ================= -->
 
-<section class="card">
-
-<div class="button-group">
-
-<button
-id="generate">
-
-🎞 Generate Preset
-
-</button>
-
-<button
-id="reset">
-
-↺ Reset
-
-</button>
-
-<button
-id="export">
-
-⬇ Export JPG
-
-</button>
-
-</div>
-
-</section>
-<!-- Advanced Restoration -->
-
-<section class="card">
+<section class="card fade">
 
 <h2>Film Preset</h2>
 
 <div class="button-column">
 
-<button id="generate">
+<button
+id="generate"
+class="primary">
+
 🎞 Generate Preset
+
 </button>
 
 <div class="button-row">
 
 <button id="reset">
+
 ↺ Reset
+
 </button>
 
 <button id="export">
+
 ⬇ Export JPG
+
 </button>
 
 </div>
@@ -180,28 +162,42 @@ id="export">
 
 </section>
 
+<!-- ================= AI Restoration ================= -->
 
-
-<section class="card">
+<section class="card fade">
 
 <h2>AI Restoration</h2>
+
+<p class="subtitle">
+
+Gunakan hanya jika hasil preset masih kurang maksimal.
+
+</p>
 
 <div class="restore-grid">
 
 <button id="dustRepair">
+
 ✨ Dust
+
 </button>
 
 <button id="scratchRepair">
+
 🩹 Scratch
+
 </button>
 
 <button id="colorRestore">
+
 🎨 Color
+
 </button>
 
 <button id="faceEnhance">
+
 👤 Face
+
 </button>
 
 </div>
@@ -210,54 +206,75 @@ id="export">
 id="applyRestore"
 class="primary">
 
-🚀 Apply Restoration
+🚀 Apply AI Restoration
 
 </button>
 
 </section>
-<!-- Pipeline -->
 
-<section class="card">
+<!-- ================= Information ================= -->
 
-<h3>
+<section class="card fade">
 
-Processing Pipeline
+<h2>Image Information</h2>
 
-</h3>
+<div class="info-grid">
 
-<ul class="pipeline">
+<div>
 
-<li id="step-detector">Detector</li>
+<label>Resolution</label>
 
-<li id="step-mask">Orange Mask</li>
+<span id="imgResolution">
 
-<li id="step-invert">Invert</li>
+-
 
-<li id="step-wb">White Balance</li>
+</span>
 
-<li id="step-level">Levels</li>
+</div>
 
-<li id="step-curve">Tone Curve</li>
+<div>
 
-<li id="step-dehaze">Dehaze</li>
+<label>Film Type</label>
 
-<li id="step-vibrance">Vibrance</li>
+<span id="filmType">
 
-<li id="step-saturation">Saturation</li>
+Auto Detect
 
-<li id="step-bogell">Bogell</li>
+</span>
 
-<li id="step-noise">Noise Reduction</li>
+</div>
 
-<li id="step-sharpen">Sharpen</li>
+<div>
 
-<li id="step-grain">Film Grain</li>
+<label>Negative</label>
 
-</ul>
+<span id="negativeStatus">
+
+-
+
+</span>
+
+</div>
+
+<div>
+
+<label>Processing</label>
+
+<span id="processingStatus">
+
+Ready
+
+</span>
+
+</div>
+
+</div>
 
 </section>
 
 </main>
+
+<!-- ================================================= -->
 
 <footer>
 
@@ -265,7 +282,7 @@ Film Scan Studio
 
 <br>
 
-Powered by AppDIGI
+Powered by <b>AppDIGI</b>
 
 </footer>
 
@@ -273,42 +290,78 @@ Powered by AppDIGI
 
 <div id="toast"></div>
 
+<!-- ================================================= -->
 <!-- Core -->
+<!-- ================================================= -->
+
 <script src="js/ui.js"></script>
+
 <script src="js/image-engine.js"></script>
+
 <script src="js/export.js"></script>
 
+<!-- ================================================= -->
 <!-- Film Engine -->
+<!-- ================================================= -->
 
 <script src="js/film/detector.js"></script>
+
 <script src="js/film/orange-mask.js"></script>
+
 <script src="js/film/invert.js"></script>
+
 <script src="js/film/whitebalance.js"></script>
+
 <script src="js/film/levels.js"></script>
+
 <script src="js/film/tonecurve.js"></script>
+
 <script src="js/film/dehaze.js"></script>
+
 <script src="js/film/vibrance.js"></script>
+
 <script src="js/film/saturation.js"></script>
+
 <script src="js/film/bogell.js"></script>
+
 <script src="js/film/noise.js"></script>
+
 <script src="js/film/detail-enhance.js"></script>
+
 <script src="js/film/sharpen.js"></script>
+
 <script src="js/film/grain.js"></script>
+
 <script src="js/film/engine.js"></script>
 
-  <!-- Advanced Restoration -->
+<!-- ================================================= -->
+<!-- AI Restoration -->
+<!-- ================================================= -->
 
 <script src="js/restoration/dust-removal.js"></script>
+
 <script src="js/restoration/scratch-removal.js"></script>
+
 <script src="js/restoration/color-restoration.js"></script>
+
 <script src="js/restoration/face-detail.js"></script>
+
 <script src="js/restoration/restoration-engine.js"></script>
 
-  <!-- Controller -->
-  
+<!-- ================================================= -->
+<!-- AI -->
+<!-- ================================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+
 <script src="js/ai/model-loader.js"></script>
+
 <script src="js/ai/super-resolution.js"></script>
+
+<!-- ================================================= -->
+<!-- Controller -->
+<!-- ================================================= -->
+
 <script src="js/app.js"></script>
 
 </body>
