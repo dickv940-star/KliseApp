@@ -333,6 +333,7 @@ UI.status(
 
 
 },
+
 if(window.SuperResolution){
 
 
