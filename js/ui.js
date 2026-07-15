@@ -1,321 +1,280 @@
 /*
-=========================================
+=========================================================
 Film Scan Studio
-UI Manager
-Version 1.0
-=========================================
+UI Controller
+Version 2.0
+AppDIGI
+=========================================================
 */
 
 const UI = {
 
     loadingElement: null,
 
-    toastElement: null,
+    statusElement: null,
 
     progressElement: null,
 
-    statusElement: null,
+    progressText: null,
+
+    //------------------------------------------------
 
     init() {
 
+        this.loadingElement =
+            document.getElementById("loading");
+
+        this.statusElement =
+            document.getElementById("status");
+
+        this.progressElement =
+            document.getElementById("progress");
+
+        this.progressText =
+            document.getElementById("progressText");
+
+        this.initDragDrop();
+
         console.log("UI Ready");
 
-        this.createLoading();
-
-        this.createToast();
-
-        this.createProgress();
-
-        this.createStatus();
-
-        this.bindDragArea();
-
     },
 
-    /* ===========================
-       LOADING
-    =========================== */
+    //------------------------------------------------
 
-    createLoading() {
+    status(text) {
 
-        this.loadingElement = document.createElement("div");
+        console.log(text);
 
-        this.loadingElement.id = "loading";
+        if (this.statusElement) {
 
-        this.loadingElement.innerHTML = `
-            <div class="loader"></div>
-            <p>Processing...</p>
-        `;
-
-        Object.assign(this.loadingElement.style,{
-
-            position:"fixed",
-
-            inset:"0",
-
-            background:"rgba(0,0,0,.75)",
-
-            display:"none",
-
-            justifyContent:"center",
-
-            alignItems:"center",
-
-            flexDirection:"column",
-
-            zIndex:"9999",
-
-            color:"#fff"
-
-        });
-
-        document.body.appendChild(this.loadingElement);
-
-    },
-
-    showLoading(text="Processing..."){
-
-        this.loadingElement.style.display="flex";
-
-        this.loadingElement.querySelector("p").textContent=text;
-
-    },
-
-    hideLoading(){
-
-        this.loadingElement.style.display="none";
-
-    },
-
-
-
-    /* ===========================
-       TOAST
-    =========================== */
-
-    createToast(){
-
-        this.toastElement=document.createElement("div");
-
-        this.toastElement.className="toast";
-
-        document.body.appendChild(this.toastElement);
-
-    },
-
-    toast(message,time=2500){
-
-        this.toastElement.innerHTML=message;
-
-        this.toastElement.style.display="block";
-
-        clearTimeout(this.toastTimer);
-
-        this.toastTimer=setTimeout(()=>{
-
-            this.toastElement.style.display="none";
-
-        },time);
-
-    },
-
-
-
-    /* ===========================
-       PROGRESS
-    =========================== */
-
-    createProgress(){
-
-        const wrap=document.createElement("div");
-
-        wrap.className="progress";
-
-        wrap.style.display="none";
-
-        wrap.style.position="fixed";
-
-        wrap.style.top="0";
-
-        wrap.style.left="0";
-
-        wrap.style.width="100%";
-
-        wrap.style.zIndex="99999";
-
-        const bar=document.createElement("div");
-
-        wrap.appendChild(bar);
-
-        document.body.appendChild(wrap);
-
-        this.progressElement=wrap;
-
-    },
-
-    progress(value){
-
-        this.progressElement.style.display="block";
-
-        this.progressElement.firstElementChild.style.width=value+"%";
-
-        if(value>=100){
-
-            setTimeout(()=>{
-
-                this.progressElement.style.display="none";
-
-                this.progressElement.firstElementChild.style.width="0%";
-
-            },500);
+            this.statusElement.textContent = text;
 
         }
 
     },
 
+    //------------------------------------------------
 
+    loading(show = true) {
 
-    /* ===========================
-       STATUS BAR
-    =========================== */
+        if (!this.loadingElement)
+            return;
 
-    createStatus(){
-
-        this.statusElement=document.createElement("div");
-
-        this.statusElement.style.textAlign="center";
-
-        this.statusElement.style.padding="12px";
-
-        this.statusElement.style.color="#999";
-
-        this.statusElement.innerHTML="Ready";
-
-        document.body.appendChild(this.statusElement);
+        this.loadingElement.style.display =
+            show ? "flex" : "none";
 
     },
 
-    status(text){
+    //------------------------------------------------
 
-        this.statusElement.innerHTML=text;
+    progress(percent = 0) {
 
-    },
+        if (!this.progressElement)
+            return;
 
+        percent = Math.max(
+            0,
+            Math.min(
+                100,
+                percent
+            )
+        );
 
+        this.progressElement.style.width =
+            percent + "%";
 
-    /* ===========================
-       BUTTON
-    =========================== */
+        if (this.progressText) {
 
-    disable(id){
-
-        const el=document.getElementById(id);
-
-        if(el){
-
-            el.disabled=true;
+            this.progressText.textContent =
+                Math.round(percent) + "%";
 
         }
 
     },
 
-    enable(id){
+    //------------------------------------------------
 
-        const el=document.getElementById(id);
+    toast(message, time = 2500) {
 
-        if(el){
+        let toast =
+            document.getElementById("toast");
 
-            el.disabled=false;
+        if (!toast) {
+
+            toast =
+                document.createElement("div");
+
+            toast.id = "toast";
+
+            toast.className = "toast";
+
+            document.body.appendChild(toast);
 
         }
 
+        toast.textContent = message;
+
+        toast.classList.add("show");
+
+        setTimeout(() => {
+
+            toast.classList.remove("show");
+
+        }, time);
+
     },
 
+    //------------------------------------------------
 
+    initDragDrop() {
 
-    /* ===========================
-       DRAG DROP
-    =========================== */
+        const dropArea =
+            document.getElementById("dropArea");
 
-    bindDragArea(){
+        if (!dropArea)
+            return;
 
-        const area=document.querySelector(".upload");
+        [
+            "dragenter",
+            "dragover"
+        ].forEach(event => {
 
-        if(!area) return;
+            dropArea.addEventListener(
+                event,
+                e => {
 
-        area.addEventListener("dragenter",()=>{
+                    e.preventDefault();
 
-            area.style.borderColor="#00d084";
+                    dropArea.classList.add(
+                        "drag"
+                    );
 
-            area.style.background="#252525";
+                }
+            );
 
         });
 
-        area.addEventListener("dragleave",()=>{
+        [
+            "dragleave",
+            "drop"
+        ].forEach(event => {
 
-            area.style.borderColor="#555";
+            dropArea.addEventListener(
+                event,
+                e => {
 
-            area.style.background="#1a1a1a";
+                    e.preventDefault();
+
+                    dropArea.classList.remove(
+                        "drag"
+                    );
+
+                }
+            );
 
         });
 
-        area.addEventListener("drop",()=>{
+        dropArea.addEventListener(
+            "drop",
+            async e => {
 
-            area.style.borderColor="#555";
+                const files =
+                    e.dataTransfer.files;
 
-            area.style.background="#1a1a1a";
+                if (
+                    files &&
+                    files.length
+                ) {
 
-        });
+                    await App.loadImage(
+                        files[0]
+                    );
 
-    },
+                }
 
-
-
-    /* ===========================
-       BEFORE AFTER
-    =========================== */
-
-    beforeAfter(beforeCanvas,afterCanvas){
-
-        console.log("Before After Mode");
-
-        // disiapkan untuk slider comparison
-    },
-
-
-
-    /* ===========================
-       ZOOM
-    =========================== */
-
-    zoomLabel(value){
-
-        this.status("Zoom : "+value+"%");
+            }
+        );
 
     },
 
+    //------------------------------------------------
 
+    enableGenerate(enable = true) {
 
-    /* ===========================
-       RESET UI
-    =========================== */
+        const btn =
+            document.getElementById(
+                "generate"
+            );
 
-    reset(){
+        if (!btn)
+            return;
 
-        this.status("Ready");
+        btn.disabled = !enable;
+
+    },
+
+    //------------------------------------------------
+
+    enableExport(enable = true) {
+
+        const btn =
+            document.getElementById(
+                "export"
+            );
+
+        if (!btn)
+            return;
+
+        btn.disabled = !enable;
+
+    },
+
+    //------------------------------------------------
+
+    beforeAfter(showAfter = true) {
+
+        const before =
+            document.getElementById(
+                "beforeCanvas"
+            );
+
+        const after =
+            document.getElementById(
+                "preview"
+            );
+
+        if (!before || !after)
+            return;
+
+        before.style.display =
+            showAfter ? "none" : "block";
+
+        after.style.display =
+            showAfter ? "block" : "none";
+
+    },
+
+    //------------------------------------------------
+
+    reset() {
 
         this.progress(0);
 
-        this.hideLoading();
+        this.status("Ready");
+
+        this.enableGenerate(false);
+
+        this.enableExport(false);
 
     }
 
 };
 
+window.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
+        UI.init();
 
-window.addEventListener("DOMContentLoaded",()=>{
-
-    UI.init();
-
-});
+    }
+);
