@@ -183,22 +183,22 @@ LOGO
 
     display:block;
 
-    width:110px;
+    width:150px;
 
-    height:110px;
+    height:150px;
 
-    margin:0 auto 20px;
+    margin:0 auto 25px;
 
     object-fit:contain;
 
-    background:white;
+    background:yellow;
 
     border-radius:50%;
 
-    padding:14px;
+    padding:18px;
 
     box-shadow:
-        0 10px 35px rgba(0,0,0,.35);
+        0 10px 60px rgba(0,0,0,.60);
 
 }
 
