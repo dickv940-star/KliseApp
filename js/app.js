@@ -375,51 +375,6 @@ const App = {
             );
 
 
-
-
-
-
-
-            //----------------------------------
-            // HD Enhancement
-            //----------------------------------
-
-
-            if(window.DetailEnhance){
-
-
-                UI.status(
-                    "Enhancing Detail..."
-                );
-
-
-
-                const image =
-                    ImageEngine.getImageData();
-
-
-
-                const result =
-                    DetailEnhance.apply(
-                        image
-                    );
-
-
-
-                ImageEngine.putImageData(
-                    result
-                );
-
-
-
-            }
-
-
-
-
-
-
-
             //----------------------------------
             // Super Resolution
             //----------------------------------
