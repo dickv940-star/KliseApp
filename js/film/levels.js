@@ -2,78 +2,189 @@
 =========================================================
 Film Scan Studio
 Auto Levels Engine
-Version 1.0
+Version 2.1
 AppDIGI
 =========================================================
 */
 
+
 const Levels = {
 
 
-    /*
-    Auto contrast / levels adjustment
-    */
-
-    apply(imageData){
+    name:"Levels",
 
 
-        if(!imageData) return null;
+
+    apply(input){
 
 
-        const data = imageData.data;
+        console.log(
+            "Applying Auto Levels..."
+        );
+
+
+
+        if(!input){
+
+            console.error(
+                "Levels: input kosong"
+            );
+
+            return input;
+
+        }
+
+
+
+        let imageData;
+
+
+
+        // jika langsung ImageData
+
+        if(
+            input.data &&
+            input.data.length
+        ){
+
+            imageData = input;
+
+
+        }
+
+        // jika object memiliki imageData
+
+        else if(
+            input.imageData
+        ){
+
+            imageData =
+                input.imageData;
+
+
+        }
+
+        // jika canvas
+
+        else if(
+            input.getContext
+        ){
+
+
+            const ctx =
+                input.getContext("2d");
+
+
+            imageData =
+                ctx.getImageData(
+                    0,
+                    0,
+                    input.width,
+                    input.height
+                );
+
+
+        }
+
+
+
+        if(
+            !imageData ||
+            !imageData.data
+        ){
+
+            console.error(
+                "Levels: format tidak dikenali",
+                input
+            );
+
+
+            return input;
+
+        }
+
+
+
+        const data =
+            imageData.data;
+
 
 
         let min = 255;
+
         let max = 0;
 
 
-        // Cari range pixel
 
-        for(let i = 0; i < data.length; i += 4){
+        for(
+            let i=0;
+            i<data.length;
+            i+=4
+        ){
+
+            const avg =
+            (
+                data[i] +
+                data[i+1] +
+                data[i+2]
+            ) / 3;
 
 
-            let r = data[i];
-            let g = data[i+1];
-            let b = data[i+2];
+
+            if(avg < min)
+                min = avg;
 
 
-            let avg = (r + g + b) / 3;
-
-
-            if(avg < min) min = avg;
-
-            if(avg > max) max = avg;
+            if(avg > max)
+                max = avg;
 
 
         }
 
 
 
-        let range = max - min;
-
-
-        if(range === 0) return imageData;
+        const range =
+            max-min;
 
 
 
-        // Apply levels
+        if(range === 0){
 
-        for(let i = 0; i < data.length; i += 4){
+            return input;
+
+        }
+
+
+
+
+        for(
+            let i=0;
+            i<data.length;
+            i+=4
+        ){
 
 
             data[i] =
-                ((data[i] - min) / range) * 255;
+                ((data[i]-min)/range)*255;
 
 
             data[i+1] =
-                ((data[i+1] - min) / range) * 255;
+                ((data[i+1]-min)/range)*255;
 
 
             data[i+2] =
-                ((data[i+2] - min) / range) * 255;
+                ((data[i+2]-min)/range)*255;
+
 
 
         }
+
+
+
+        console.log(
+            "Levels Finished"
+        );
+
 
 
         return imageData;
@@ -91,5 +202,5 @@ window.Levels = Levels;
 
 
 console.log(
-    "Levels Engine Loaded"
+"Levels Engine Loaded"
 );
