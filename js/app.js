@@ -216,7 +216,9 @@ async generate() {
             UI.status(
                 "Enhancing HD Detail..."
             );
-
+UI.status(
+"AI Restoring Film Detail..."
+);
 
             UI.progress(80);
 
