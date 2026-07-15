@@ -2,7 +2,7 @@
 =========================================================
 Film Scan Studio
 App Controller
-Version 2.0
+Version 2.1
 AppDIGI
 =========================================================
 */
@@ -10,12 +10,7 @@ AppDIGI
 const App = {
 
     canvas: null,
-
     ctx: null,
-
-    originalImage: null,
-
-    processed: false,
 
     //--------------------------------------------------
 
@@ -27,25 +22,27 @@ const App = {
 
         this.canvas = document.getElementById("preview");
 
+        if (!this.canvas) {
+
+            console.error("Canvas #preview tidak ditemukan.");
+            return;
+
+        }
+
         this.ctx = this.canvas.getContext("2d", {
             willReadFrequently: true
         });
 
+        UI.init();
+
         this.bindEvents();
 
-        if ("serviceWorker" in navigator) {
+        this.registerServiceWorker();
 
-            navigator.serviceWorker
-                .register("./service-worker.js")
-                .then(() => {
+        UI.status("Ready");
 
-                    console.log(
-                        "Service Worker Registered"
-                    );
-
-                });
-
-        }
+        UI.enableGenerate(false);
+        UI.enableExport(false);
 
     },
 
@@ -53,54 +50,84 @@ const App = {
 
     bindEvents() {
 
-        //------------------------------------------
-        // Upload
-        //------------------------------------------
+        const upload =
+            document.getElementById("upload");
 
-        const upload = document.getElementById("upload");
+        const generate =
+            document.getElementById("generate");
 
-        upload.addEventListener(
-            "change",
-            (e) => {
+        const reset =
+            document.getElementById("reset");
 
-                this.loadImage(
-                    e.target.files[0]
-                );
+        const exportBtn =
+            document.getElementById("export");
 
-            }
-        );
+        //--------------------------------------
 
-        //------------------------------------------
-        // Generate
-        //------------------------------------------
+        if (upload) {
 
-        document
-            .getElementById("generate")
-            .addEventListener(
-                "click",
-                () => {
+            upload.addEventListener(
+                "change",
+                async (e) => {
 
-                    this.generate();
+                    if (!e.target.files.length)
+                        return;
 
-                }
-            );
-
-        //------------------------------------------
-        // Export
-        //------------------------------------------
-
-        document
-            .getElementById("export")
-            .addEventListener(
-                "click",
-                () => {
-
-                    ExportEngine.save(
-                        this.canvas
+                    await this.loadImage(
+                        e.target.files[0]
                     );
 
                 }
             );
+
+        }
+
+        //--------------------------------------
+
+        if (generate) {
+
+            generate.addEventListener(
+                "click",
+                async () => {
+
+                    await this.generate();
+
+                }
+            );
+
+        }
+
+        //--------------------------------------
+
+        if (reset) {
+
+            reset.addEventListener(
+                "click",
+                () => {
+
+                    ImageEngine.reset();
+
+                    UI.status("Image Reset");
+
+                }
+            );
+
+        }
+
+        //--------------------------------------
+
+        if (exportBtn) {
+
+            exportBtn.addEventListener(
+                "click",
+                () => {
+
+                    ExportEngine.save(this.canvas);
+
+                }
+            );
+
+        }
 
     },
 
@@ -108,26 +135,27 @@ const App = {
 
     async loadImage(file) {
 
-        if (!file)
-            return;
-
-        UI.loading(true);
-
         try {
+
+            UI.loading(true);
+
+            UI.status("Loading Image...");
+
+            UI.progress(5);
 
             await ImageEngine.load(
                 file,
                 this.canvas
             );
 
-            this.originalImage = file;
+            UI.progress(30);
 
-            UI.status(
-                "Image Loaded"
-            );
+            UI.status("Image Loaded");
+
+            UI.enableGenerate(true);
 
             //----------------------------------
-            // Auto Generate
+            // Auto Apply Preset
             //----------------------------------
 
             await this.generate();
@@ -138,9 +166,7 @@ const App = {
 
             console.error(err);
 
-            UI.status(
-                "Failed Loading Image"
-            );
+            UI.toast("Failed loading image");
 
         }
 
@@ -152,27 +178,20 @@ const App = {
 
     async generate() {
 
-        if (!this.canvas.width)
-            return;
-
-        UI.loading(true);
-
-        UI.status(
-            "Processing..."
-        );
-
         try {
+
+            UI.loading(true);
+
+            UI.status("Applying Film Preset...");
+
+            UI.progress(40);
 
             const start =
                 performance.now();
 
-            //----------------------------------
-
             await FilmEngine.process(
                 this.canvas
             );
-
-            //----------------------------------
 
             const end =
                 performance.now();
@@ -181,17 +200,19 @@ const App = {
 
                 "Finished",
 
-                (end - start).toFixed(1),
+                (end - start).toFixed(0),
 
                 "ms"
 
             );
 
-            this.processed = true;
+            UI.progress(100);
 
-            UI.status(
-                "Preset Applied"
-            );
+            UI.status("Finished");
+
+            UI.toast("Preset Applied");
+
+            UI.enableExport(true);
 
         }
 
@@ -199,9 +220,7 @@ const App = {
 
             console.error(err);
 
-            UI.status(
-                "Processing Error"
-            );
+            UI.toast("Generate Failed");
 
         }
 
@@ -211,29 +230,35 @@ const App = {
 
     //--------------------------------------------------
 
-    reset() {
+    registerServiceWorker() {
 
-        if (!this.originalImage)
+        if (!("serviceWorker" in navigator))
             return;
 
-        ImageEngine.load(
-            this.originalImage,
-            this.canvas
-        );
+        navigator.serviceWorker
+            .register("./service-worker.js")
+            .then(() => {
 
-        this.processed = false;
+                console.log(
+                    "Service Worker Registered"
+                );
 
-        UI.status(
-            "Reset"
-        );
+            })
+            .catch(err => {
+
+                console.error(err);
+
+            });
 
     }
 
 };
 
+//======================================================
+
 window.addEventListener(
 
-    "DOMContentLoaded",
+    "load",
 
     () => {
 
