@@ -765,10 +765,6 @@ if(installBtn){
 
 }
 
-};
-
-
-
 
 
 window.addEventListener(
