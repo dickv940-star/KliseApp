@@ -2,7 +2,7 @@
 =========================================================
 Film Scan Studio
 UI Controller
-Version 2.1
+Version 2.2
 AppDIGI
 =========================================================
 */
@@ -18,7 +18,6 @@ const UI = {
     progressElement: null,
 
     progressText: null,
-
 
     fileInput: null,
 
@@ -60,7 +59,6 @@ const UI = {
 
         this.initUpload();
 
-
         this.initDragDrop();
 
 
@@ -71,6 +69,305 @@ const UI = {
 
 
     },
+
+
+
+
+
+    //------------------------------------------------
+    // UPLOAD FOTO
+    //------------------------------------------------
+
+    initUpload(){
+
+
+        this.fileInput =
+            document.getElementById(
+                "upload"
+            );
+
+
+        this.uploadButton =
+            document.getElementById(
+                "browse"
+            );
+
+
+
+        if(
+            !this.fileInput ||
+            !this.uploadButton
+        ){
+
+            console.warn(
+                "Upload element belum tersedia"
+            );
+
+            return;
+
+        }
+
+
+
+
+
+        this.uploadButton.addEventListener(
+            "click",
+            ()=>{
+
+
+                console.log(
+                    "Opening file picker"
+                );
+
+
+                this.fileInput.click();
+
+
+            }
+        );
+
+
+
+
+
+
+        this.fileInput.addEventListener(
+            "change",
+            async e=>{
+
+
+                const file =
+                    e.target.files[0];
+
+
+                if(!file)
+                    return;
+
+
+
+
+                console.log(
+                    "Selected:",
+                    file.name
+                );
+
+
+
+                this.status(
+                    "Loading image..."
+                );
+
+
+
+                this.loading(true);
+
+
+
+                try{
+
+
+                    if(
+                        window.App &&
+                        typeof App.loadImage === "function"
+                    ){
+
+
+                        await App.loadImage(
+                            file
+                        );
+
+
+                        this.status(
+                            "Image loaded"
+                        );
+
+
+                    }
+                    else{
+
+
+                        console.error(
+                            "App.loadImage tidak ditemukan"
+                        );
+
+
+                        this.status(
+                            "Engine belum siap"
+                        );
+
+
+                    }
+
+
+                }
+                catch(error){
+
+
+                    console.error(
+                        error
+                    );
+
+
+                    this.status(
+                        "Gagal membuka gambar"
+                    );
+
+
+                }
+                finally{
+
+
+                    this.loading(false);
+
+
+                }
+
+
+
+            }
+        );
+
+
+
+    },
+
+
+
+
+
+
+
+    //------------------------------------------------
+    // DRAG DROP
+    //------------------------------------------------
+
+    initDragDrop(){
+
+
+
+        const dropArea =
+            document.getElementById(
+                "dropArea"
+            );
+
+
+
+        if(!dropArea)
+            return;
+
+
+
+
+
+
+        [
+            "dragenter",
+            "dragover"
+
+        ].forEach(event=>{
+
+
+            dropArea.addEventListener(
+                event,
+                e=>{
+
+
+                    e.preventDefault();
+
+
+                    dropArea.classList.add(
+                        "drag"
+                    );
+
+
+                }
+            );
+
+
+        });
+
+
+
+
+
+
+
+
+        [
+            "dragleave",
+            "drop"
+
+        ].forEach(event=>{
+
+
+            dropArea.addEventListener(
+                event,
+                e=>{
+
+
+                    e.preventDefault();
+
+
+                    dropArea.classList.remove(
+                        "drag"
+                    );
+
+
+                }
+            );
+
+
+        });
+
+
+
+
+
+
+
+
+        dropArea.addEventListener(
+            "drop",
+            async e=>{
+
+
+                const files =
+                    e.dataTransfer.files;
+
+
+
+                if(
+                    files &&
+                    files.length
+                ){
+
+
+                    console.log(
+                        "Dropped:",
+                        files[0].name
+                    );
+
+
+
+                    await App.loadImage(
+                        files[0]
+                    );
+
+
+                }
+
+
+            }
+        );
+
+
+
+    },
+
+
+
+
 
 
 
@@ -87,7 +384,9 @@ const UI = {
         );
 
 
-        if(this.statusElement){
+        if(
+            this.statusElement
+        ){
 
             this.statusElement.textContent =
                 text;
@@ -101,6 +400,8 @@ const UI = {
 
 
 
+
+
     //------------------------------------------------
     // LOADING
     //------------------------------------------------
@@ -108,7 +409,9 @@ const UI = {
     loading(show=true){
 
 
-        if(!this.loadingElement)
+        if(
+            !this.loadingElement
+        )
             return;
 
 
@@ -124,6 +427,7 @@ const UI = {
 
 
 
+
     //------------------------------------------------
     // PROGRESS
     //------------------------------------------------
@@ -131,7 +435,9 @@ const UI = {
     progress(percent=0){
 
 
-        if(!this.progressElement)
+        if(
+            !this.progressElement
+        )
             return;
 
 
@@ -152,15 +458,19 @@ const UI = {
 
 
 
-        if(this.progressText){
+        if(
+            this.progressText
+        ){
 
             this.progressText.textContent =
-                Math.round(percent)+"%";
+                Math.round(percent) + "%";
 
         }
 
 
     },
+
+
 
 
 
@@ -208,6 +518,7 @@ const UI = {
 
 
 
+
         toast.textContent =
             message;
 
@@ -219,281 +530,22 @@ const UI = {
 
 
 
-        setTimeout(()=>{
-
-
-            toast.classList.remove(
-                "show"
-            );
-
-
-        },time);
-
-
-
-    },
-
-
-
-
-
-
-
-    //------------------------------------------------
-    // UPLOAD FOTO KLİSE
-    //------------------------------------------------
-
-    initUpload(){
-
-
-
-        this.uploadButton =
-            document.getElementById(
-                "uploadBtn"
-            );
-
-
-
-        this.fileInput =
-            document.getElementById(
-                "filmInput"
-            );
-
-
-
-
-        if(
-            !this.uploadButton ||
-            !this.fileInput
-        ){
-
-
-            console.warn(
-                "Upload element belum tersedia"
-            );
-
-
-            return;
-
-
-        }
-
-
-
-
-
-        this.uploadButton.addEventListener(
-            "click",
+        setTimeout(
             ()=>{
 
 
-                console.log(
-                    "Opening file picker"
+                toast.classList.remove(
+                    "show"
                 );
 
 
-                this.fileInput.click();
-
-
-
-            }
-        );
-
-
-
-
-
-
-        this.fileInput.addEventListener(
-            "change",
-            async e=>{
-
-
-                const file =
-                    e.target.files[0];
-
-
-
-                if(!file)
-                    return;
-
-
-
-
-                console.log(
-                    "Selected:",
-                    file.name
-                );
-
-
-
-                this.status(
-                    "Memuat foto..."
-                );
-
-
-
-                if(
-                    window.App &&
-                    typeof App.loadImage === "function"
-                ){
-
-
-                    await App.loadImage(
-                        file
-                    );
-
-
-
-                    this.status(
-                        "Foto berhasil dimuat"
-                    );
-
-
-                }
-                else{
-
-
-                    console.error(
-                        "App.loadImage tidak tersedia"
-                    );
-
-
-                }
-
-
-
-            }
+            },
+            time
         );
 
 
 
     },
-
-
-
-
-
-
-
-    //------------------------------------------------
-    // DRAG DROP
-    //------------------------------------------------
-
-    initDragDrop(){
-
-
-
-        const dropArea =
-            document.getElementById(
-                "dropArea"
-            );
-
-
-
-        if(!dropArea)
-            return;
-
-
-
-
-
-        [
-            "dragenter",
-            "dragover"
-
-        ].forEach(event=>{
-
-
-            dropArea.addEventListener(
-                event,
-                e=>{
-
-
-                    e.preventDefault();
-
-
-                    dropArea.classList.add(
-                        "drag"
-                    );
-
-
-                }
-            );
-
-
-        });
-
-
-
-
-
-
-
-        [
-            "dragleave",
-            "drop"
-
-        ].forEach(event=>{
-
-
-            dropArea.addEventListener(
-                event,
-                e=>{
-
-
-                    e.preventDefault();
-
-
-                    dropArea.classList.remove(
-                        "drag"
-                    );
-
-
-                }
-            );
-
-
-        });
-
-
-
-
-
-
-
-        dropArea.addEventListener(
-            "drop",
-            async e=>{
-
-
-                const files =
-                    e.dataTransfer.files;
-
-
-
-                if(
-                    files &&
-                    files.length
-                ){
-
-
-                    await App.loadImage(
-                        files[0]
-                    );
-
-
-                }
-
-
-
-            }
-        );
-
-
-
-    },
-
 
 
 
@@ -519,8 +571,8 @@ const UI = {
                 !enable;
 
 
-
     },
+
 
 
 
@@ -537,57 +589,6 @@ const UI = {
         if(btn)
             btn.disabled =
                 !enable;
-
-
-
-    },
-
-
-
-
-
-
-    //------------------------------------------------
-    // BEFORE AFTER
-    //------------------------------------------------
-
-    beforeAfter(showAfter=true){
-
-
-
-        const before =
-            document.getElementById(
-                "beforeCanvas"
-            );
-
-
-
-        const after =
-            document.getElementById(
-                "preview"
-            );
-
-
-
-        if(
-            !before ||
-            !after
-        )
-            return;
-
-
-
-        before.style.display =
-            showAfter ?
-            "none":
-            "block";
-
-
-
-        after.style.display =
-            showAfter ?
-            "block":
-            "none";
 
 
     },
@@ -626,7 +627,6 @@ const UI = {
 
 
     }
-
 
 
 };
