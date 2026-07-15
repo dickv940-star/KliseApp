@@ -2,7 +2,7 @@
 =========================================================
 Film Scan Studio
 App Controller
-Version 2.3 Multi Pass
+Version 3.0
 AppDIGI
 =========================================================
 */
@@ -15,626 +15,248 @@ const App = {
 
     ctx:null,
 
-    generateCount:0,
+    processing:false,
 
 
+//--------------------------------------------------
 
-    //--------------------------------------------------
+async init(){
 
-    async init(){
 
+console.log("================================");
+console.log("Film Scan Studio Started");
+console.log("================================");
 
-        console.log(
-            "================================"
-        );
 
-        console.log(
-            "Film Scan Studio Started"
-        );
 
-        console.log(
-            "================================"
-        );
+this.canvas =
+document.getElementById(
+"preview"
+);
 
 
 
-        this.canvas =
-        document.getElementById(
-            "preview"
-        );
+if(!this.canvas){
 
+console.error(
+"Canvas preview tidak ditemukan"
+);
 
+return;
 
-        if(!this.canvas){
+}
 
-            console.error(
-                "Canvas preview tidak ditemukan"
-            );
 
-            return;
 
-        }
+this.ctx =
+this.canvas.getContext(
+"2d",
+{
+willReadFrequently:true
+}
+);
 
 
 
-        this.ctx =
-        this.canvas.getContext(
-            "2d",
-            {
-                willReadFrequently:true
-            }
-        );
+UI.init();
 
 
+this.bindEvents();
 
-        UI.init();
 
+this.registerServiceWorker();
 
-        this.bindEvents();
 
+UI.status(
+"Ready"
+);
 
-        this.registerServiceWorker();
 
+UI.enableGenerate(false);
 
+UI.enableExport(false);
 
-        UI.status(
-            "Ready"
-        );
 
 
-        UI.enableGenerate(
-            false
-        );
+},
 
 
-        UI.enableExport(
-            false
-        );
 
+//--------------------------------------------------
 
-    },
+bindEvents(){
 
 
 
+const upload =
+document.getElementById(
+"upload"
+);
 
 
-    //--------------------------------------------------
 
-    bindEvents(){
+const generate =
+document.getElementById(
+"generate"
+);
 
 
-        const upload =
-        document.getElementById(
-            "upload"
-        );
 
+const reset =
+document.getElementById(
+"reset"
+);
 
-        const generate =
-        document.getElementById(
-            "generate"
-        );
 
 
-        const reset =
-        document.getElementById(
-            "reset"
-        );
+const exportBtn =
+document.getElementById(
+"export"
+);
 
 
-        const exportBtn =
-        document.getElementById(
-            "export"
-        );
 
-
-
-
-
-        if(upload){
-
-
-            upload.addEventListener(
-                "change",
-                async e=>{
-
-
-                    if(!e.target.files.length)
-                        return;
-
-
-
-                    await this.loadImage(
-                        e.target.files[0]
-                    );
-
-
-                }
-            );
-
-
-        }
-
-
-
-
-
-        if(generate){
-
-
-            generate.addEventListener(
-                "click",
-                async()=>{
-
-
-                    await this.generate();
-
-
-                }
-            );
-
-
-        }
-
-
-
-
-
-        if(reset){
-
-
-            reset.addEventListener(
-                "click",
-                ()=>{
-
-
-                    ImageEngine.reset();
-
-
-                    this.generateCount = 0;
-
-
-                    UI.status(
-                        "Reset"
-                    );
-
-
-                }
-            );
-
-
-        }
-
-
-
-
-
-
-        if(exportBtn){
-
-
-            exportBtn.addEventListener(
-                "click",
-                ()=>{
-
-
-                    ExportEngine.save(
-                        this.canvas
-                    );
-
-
-                }
-            );
-
-
-        }
-
-const applyRestore =
+const restoreBtn =
 document.getElementById(
 "applyRestore"
 );
 
 
-if(applyRestore){
 
-applyRestore.addEventListener(
-"click",
-async()=>{
 
-await this.restore();
+
+if(upload){
+
+
+upload.addEventListener(
+"change",
+async(e)=>{
+
+
+if(
+!e.target.files.length
+)
+return;
+
+
+
+await this.loadImage(
+e.target.files[0]
+);
+
+
 
 }
 );
 
+
 }
-    },
 
 
 
-    //--------------------------------------------------
 
-    async loadImage(file){
 
+if(generate){
 
-        try{
 
+generate.addEventListener(
+"click",
+()=>{
 
-            UI.loading(true);
+this.generate();
 
+}
+);
 
-            UI.status(
-                "Loading Image..."
-            );
 
+}
 
 
-            this.generateCount = 0;
 
 
 
-            await ImageEngine.load(
-                file,
-                this.canvas
-            );
+if(reset){
 
 
+reset.addEventListener(
+"click",
+()=>{
 
-            UI.status(
-                "Image Loaded"
-            );
 
+ImageEngine.reset();
 
 
-            UI.enableGenerate(
-                true
-            );
+UI.status(
+"Image Reset"
+);
 
 
 
-            // otomatis generate pertama
+}
+);
 
-            await this.generate();
 
+}
 
 
-        }
 
 
-        catch(err){
+if(exportBtn){
 
 
-            console.error(err);
+exportBtn.addEventListener(
+"click",
+()=>{
 
 
-            UI.toast(
-                "Failed Loading Image"
-            );
+if(window.ExportEngine){
 
+ExportEngine.save(
+this.canvas
+);
 
-        }
+}
 
 
+}
+);
 
-        UI.loading(false);
 
+}
 
-    },
 
 
 
+// NEW RESTORATION BUTTON
 
+if(restoreBtn){
 
 
+restoreBtn.addEventListener(
+"click",
+()=>{
 
 
-    //--------------------------------------------------
+this.restore();
 
-    async generate(){
 
+}
+);
 
-        try{
 
+}
 
-            this.generateCount++;
 
 
+},
 
-            console.log(
-                "Generate Pass:",
-                this.generateCount
-            );
 
 
-
-            UI.loading(true);
-
-
-
-            const start =
-            performance.now();
-
-
-
-
-
-            //================================================
-            // PASS 1
-            // FILM RESTORATION
-            //================================================
-
-
-            if(this.generateCount === 1){
-
-
-
-                UI.status(
-                    "Applying Film Preset..."
-                );
-
-
-                UI.progress(
-                    40
-                );
-
-
-
-                await FilmEngine.process(
-                    this.canvas
-                );
-
-
-
-            }
-
-
-
-
-
-            //================================================
-            // PASS 2
-            // HD RESTORATION
-            //================================================
-
-
-            else{
-
-
-                console.log(
-                    "Running HD Enhancement Pass"
-                );
-
-
-
-                UI.status(
-                    "AI Restoring Detail..."
-                );
-
-
-
-                UI.progress(
-                    60
-                );
-
-
-
-
-
-                if(window.DetailEnhance){
-
-
-
-                    let image =
-                    ImageEngine.getImageData();
-
-
-
-                    image =
-                    DetailEnhance.apply(
-                        image
-                    );
-
-
-
-                    if(image){
-
-
-                        ImageEngine.putImageData(
-                            image
-                        );
-
-
-                    }
-
-
-                }
-
-
-
-
-
-
-                if(window.SuperResolution){
-
-
-
-                    UI.status(
-                        "AI Upscaling..."
-                    );
-
-
-
-                    UI.progress(
-                        80
-                    );
-
-
-
-                    const hd =
-                    await SuperResolution.enhance(
-                        this.canvas
-                    );
-
-
-
-
-                    this.canvas.width =
-                    hd.width;
-
-
-
-                    this.canvas.height =
-                    hd.height;
-
-
-
-
-                    const ctx =
-                    this.canvas.getContext(
-                        "2d"
-                    );
-
-
-
-                    ctx.drawImage(
-                        hd,
-                        0,
-                        0
-                    );
-
-
-
-                    console.log(
-
-                        "HD Result:",
-                        hd.width,
-                        "x",
-                        hd.height
-
-                    );
-
-
-                }
-
-
-
-            }
-
-
-
-
-
-
-
-            const end =
-            performance.now();
-
-
-
-            console.log(
-
-                "Finished",
-                (end-start).toFixed(0),
-                "ms"
-
-            );
-
-
-
-            UI.progress(
-                100
-            );
-
-
-            UI.status(
-                "Finished"
-            );
-
-
-
-            UI.toast(
-                "Preset Finished"
-            );
-
-
-
-            UI.enableExport(
-                true
-            );
-
-
-
-        }
-
-
-
-        catch(err){
-
-
-            console.error(
-                err
-            );
-
-
-            UI.toast(
-                "Generate Failed"
-            );
-
-
-        }
-
-
-
-        UI.loading(false);
-
-
-    },
-
-
-
-
-
-
-
-    //--------------------------------------------------
-
-    registerServiceWorker(){
-
-
-        if(
-            !("serviceWorker" in navigator)
-        )
-        return;
-
-
-
-        navigator.serviceWorker
-        .register(
-            "./service-worker.js"
-        )
-
-        .then(()=>{
-
-
-            console.log(
-                "Service Worker Registered"
-            );
-
-
-        })
-
-
-        .catch(err=>{
-
-
-            console.error(
-                err
-            );
-
-
-        })
 
 //--------------------------------------------------
 
-async restore(){
+async loadImage(file){
+
 
 
 try{
@@ -644,13 +266,353 @@ UI.loading(true);
 
 
 UI.status(
+"Loading Image..."
+);
+
+
+
+await ImageEngine.load(
+file,
+this.canvas
+);
+
+
+
+UI.status(
+"Image Loaded"
+);
+
+
+
+UI.enableGenerate(true);
+
+
+
+await this.generate();
+
+
+
+}
+
+
+
+catch(err){
+
+
+console.error(err);
+
+
+UI.toast(
+"Load Image Failed"
+);
+
+
+
+}
+
+
+
+UI.loading(false);
+
+
+
+},
+
+
+
+
+
+//--------------------------------------------------
+
+async generate(){
+
+
+
+if(this.processing)
+return;
+
+
+
+try{
+
+
+this.processing=true;
+
+
+UI.loading(true);
+
+
+UI.status(
+"Applying Film Preset..."
+);
+
+
+
+UI.progress(
+40
+);
+
+
+
+const start =
+performance.now();
+
+
+
+
+
+await FilmEngine.process(
+this.canvas
+);
+
+
+
+
+
+// Detail Enhance
+
+if(
+window.DetailEnhance
+){
+
+
+UI.status(
+"Enhancing Detail..."
+);
+
+
+await this.applyDetail();
+
+
+}
+
+
+
+
+
+// Super Resolution
+
+if(
+window.SuperResolution
+){
+
+
+UI.status(
+"AI Upscaling..."
+);
+
+
+
+const hd =
+await SuperResolution.enhance(
+this.canvas
+);
+
+
+
+this.canvas.width =
+hd.width;
+
+
+this.canvas.height =
+hd.height;
+
+
+
+this.ctx.drawImage(
+hd,
+0,
+0
+);
+
+
+
+console.log(
+"Super Resolution:",
+hd.width,
+hd.height
+);
+
+
+
+}
+
+
+
+
+const end =
+performance.now();
+
+
+
+console.log(
+"Finished",
+(end-start).toFixed(0),
+"ms"
+);
+
+
+
+UI.progress(
+100
+);
+
+
+UI.status(
+"Finished"
+);
+
+
+
+UI.toast(
+"HD Film Preset Applied"
+);
+
+
+
+UI.enableExport(
+true
+);
+
+
+
+}
+
+
+
+catch(err){
+
+
+console.error(err);
+
+
+UI.toast(
+"Generate Failed"
+);
+
+
+
+}
+
+
+
+this.processing=false;
+
+
+UI.loading(false);
+
+
+
+},
+
+
+
+
+
+//--------------------------------------------------
+
+async applyDetail(){
+
+
+
+if(
+!window.DetailEnhance
+)
+return;
+
+
+
+let ctx =
+this.canvas.getContext(
+"2d"
+);
+
+
+
+let data =
+ctx.getImageData(
+0,
+0,
+this.canvas.width,
+this.canvas.height
+);
+
+
+
+data =
+DetailEnhance.apply(
+data
+);
+
+
+
+ctx.putImageData(
+data,
+0,
+0
+);
+
+
+
+},
+
+
+
+
+
+
+//--------------------------------------------------
+// ADVANCED RESTORATION
+//--------------------------------------------------
+
+async restore(){
+
+
+
+try{
+
+
+if(
+!window.RestorationEngine
+){
+
+
+throw new Error(
+"Restoration Engine belum tersedia"
+);
+
+
+}
+
+
+
+
+UI.loading(true);
+
+
+
+UI.status(
 "Advanced Restoration..."
 );
 
 
 
+UI.progress(
+30
+);
+
+
+
+
 await RestorationEngine.process(
 this.canvas
+);
+
+
+
+
+UI.progress(
+100
 );
 
 
@@ -670,13 +632,17 @@ UI.toast(
 }
 
 
+
 catch(err){
 
+
 console.error(err);
+
 
 UI.toast(
 "Restoration Failed"
 );
+
 
 
 }
@@ -686,19 +652,59 @@ UI.toast(
 UI.loading(false);
 
 
+
+},
+
+
+
+
+
+
+//--------------------------------------------------
+
+registerServiceWorker(){
+
+
+
+if(
+!"serviceWorker" in navigator
+)
+return;
+
+
+
+navigator.serviceWorker
+.register(
+"./service-worker.js"
+)
+.then(()=>{
+
+
+console.log(
+"Service Worker Registered"
+);
+
+
+
+})
+.catch(err=>{
+
+
+console.error(
+err
+);
+
+
+
+});
+
+
+
 }
 
-    }
 
 
 };
-
-
-
-
-
-window.App =
-App;
 
 
 
@@ -708,7 +714,9 @@ window.addEventListener(
 "load",
 ()=>{
 
-    App.init();
+
+App.init();
+
 
 }
 );
