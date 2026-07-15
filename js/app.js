@@ -702,7 +702,67 @@ err
 
 }
 
+//------------------------------------------------
+// Install PWA
+//------------------------------------------------
 
+let deferredPrompt = null;
+
+window.addEventListener(
+    "beforeinstallprompt",
+    (e)=>{
+
+        e.preventDefault();
+
+        deferredPrompt = e;
+
+        const btn =
+            document.getElementById(
+                "installApp"
+            );
+
+        if(btn){
+
+            btn.hidden = false;
+
+        }
+
+    }
+);
+
+const installBtn =
+document.getElementById(
+    "installApp"
+);
+
+if(installBtn){
+
+    installBtn.onclick = async()=>{
+
+        if(!deferredPrompt){
+
+            alert(
+                "Aplikasi sudah terinstall atau browser tidak mendukung."
+            );
+
+            return;
+
+        }
+
+        deferredPrompt.prompt();
+
+        const result =
+        await deferredPrompt.userChoice;
+
+        console.log(result.outcome);
+
+        deferredPrompt = null;
+
+        installBtn.hidden = true;
+
+    };
+
+}
 
 };
 
