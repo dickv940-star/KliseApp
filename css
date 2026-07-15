@@ -1,254 +1,477 @@
-/* ==========================
-   FilmHD - Style.css
-========================== */
+/* ===================================================
+   Film Scan Studio
+   AppDIGI
+=================================================== */
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Segoe UI, Arial, sans-serif;
+    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
 }
 
 body{
-    background:#FFD54F;
-    height:100vh;
-    overflow:hidden;
+
+    background:#111;
+
+    color:#fff;
+
+    min-height:100vh;
+
 }
 
-/* Layout */
+/* ================= HEADER ================= */
 
-#app{
-    display:flex;
-    width:100%;
-    height:100vh;
-}
+header{
 
-/* ==========================
-   Sidebar
-========================== */
+    background:#1b1b1b;
 
-.sidebar{
-    width:320px;
-    background:#FFF8E1;
-    border-right:2px solid #FBC02D;
-    overflow-y:auto;
     padding:20px;
+
+    text-align:center;
+
+    border-bottom:1px solid #333;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+
 }
 
 .logo{
-    text-align:center;
-    margin-bottom:25px;
+
+    width:80px;
+
+    height:80px;
+
+    object-fit:contain;
+
+    margin-bottom:10px;
+
 }
 
-.logo h1{
-    color:#F57F17;
-    font-size:32px;
+header h1{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#ffffff;
+
 }
 
-.logo span{
-    color:#666;
+header p{
+
+    color:#aaa;
+
+    margin-top:6px;
+
     font-size:14px;
+
 }
 
-.section-title{
+/* ================= MAIN ================= */
+
+main{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:20px;
+
+}
+
+/* ================= CARD ================= */
+
+section{
+
+    background:#1a1a1a;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 8px 30px rgba(0,0,0,.35);
+
+}
+
+/* ================= Upload ================= */
+
+.upload{
+
+    border:2px dashed #555;
+
+    transition:.3s;
+
+    text-align:center;
+
+}
+
+.upload:hover{
+
+    border-color:#4cafef;
+
+    background:#202020;
+
+}
+
+input[type=file]{
+
+    width:100%;
+
+    color:white;
+
+    padding:25px;
+
+    cursor:pointer;
+
+}
+
+/* ================= Canvas ================= */
+
+canvas{
+
+    width:100%;
+
+    border-radius:12px;
+
+    background:#000;
+
     display:block;
-    margin-bottom:8px;
-    font-weight:bold;
+
+    min-height:400px;
+
+    object-fit:contain;
+
 }
 
-/* Card */
+/* ================= BUTTON ================= */
+
+.buttons{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+button{
+
+    flex:1;
+
+    min-width:180px;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    transition:.25s;
+
+}
+
+/* Generate */
+
+#generate{
+
+    background:#00b894;
+
+    color:white;
+
+}
+
+#generate:hover{
+
+    background:#00a382;
+
+    transform:translateY(-2px);
+
+}
+
+/* Export */
+
+#export{
+
+    background:#0984e3;
+
+    color:white;
+
+}
+
+#export:hover{
+
+    background:#0875ca;
+
+    transform:translateY(-2px);
+
+}
+
+/* Disabled */
+
+button:disabled{
+
+    opacity:.4;
+
+    cursor:not-allowed;
+
+}
+
+/* ================= PANEL ================= */
+
+.panel{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:15px;
+
+}
 
 .card{
-    background:#ffffff;
-    border-radius:15px;
-    padding:15px;
-    margin-bottom:15px;
-    box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+    background:#202020;
+
+    padding:18px;
+
+    border-radius:12px;
+
+}
+
+.card h3{
+
+    margin-bottom:10px;
+
+    color:#ddd;
+
 }
 
 .card label{
+
     display:block;
+
     margin-bottom:8px;
-    font-size:14px;
-    font-weight:600;
+
+    color:#aaa;
+
 }
 
-/* Input */
+.card input[type=range]{
 
-input[type=file]{
     width:100%;
+
 }
 
-input[type=range]{
-    width:100%;
-    accent-color:#FFC107;
-    cursor:pointer;
+/* ================= Preview ================= */
+
+.preview{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
 }
 
-select{
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    border:1px solid #ddd;
-    font-size:14px;
-}
+.preview img{
 
-/* ==========================
-   Button
-========================== */
-
-button{
     width:100%;
-    padding:12px;
-    border:none;
+
     border-radius:12px;
-    background:#FFC107;
-    color:#222;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.2s;
+
 }
 
-button:hover{
-    background:#FFB300;
-    transform:translateY(-2px);
+/* ================= Footer ================= */
+
+footer{
+
+    text-align:center;
+
+    padding:30px;
+
+    color:#777;
+
+    font-size:14px;
+
 }
 
-.buttons{
-    display:flex;
-    gap:10px;
-}
+/* ================= Progress ================= */
 
-.buttons button{
-    flex:1;
-}
+.progress{
 
-/* ==========================
-   Viewer
-========================== */
+    width:100%;
 
-.viewer{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    background:#FFE082;
-}
+    height:8px;
 
-/* Toolbar */
+    background:#333;
 
-.toolbar{
-    height:60px;
-    background:#FBC02D;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    border-bottom:2px solid #F9A825;
-}
+    border-radius:50px;
 
-.toolbar button{
-    width:50px;
-    height:40px;
-    padding:0;
-}
-
-#zoomValue{
-    font-weight:bold;
-}
-
-/* ==========================
-   Canvas
-========================== */
-
-#canvasContainer{
-    flex:1;
-    display:flex;
-    justify-content:center;
-    align-items:center;
     overflow:hidden;
-    background:#FFFDE7;
+
 }
 
-canvas{
-    max-width:95%;
-    max-height:95%;
+.progress div{
+
+    width:0%;
+
+    height:100%;
+
+    background:#00d084;
+
+    transition:.3s;
+
+}
+
+/* ================= Toast ================= */
+
+.toast{
+
+    position:fixed;
+
+    bottom:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#222;
+
+    color:white;
+
+    padding:14px 20px;
+
     border-radius:10px;
-    box-shadow:0 5px 20px rgba(0,0,0,.25);
-    background:white;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.4);
+
+    display:none;
+
+    z-index:9999;
+
 }
 
-/* ==========================
-   Compare
-========================== */
+/* ================= Loader ================= */
 
-.compare{
-    background:#FFF8E1;
-    padding:15px;
-    border-top:2px solid #FBC02D;
+.loader{
+
+    width:55px;
+
+    height:55px;
+
+    border:5px solid #444;
+
+    border-top:5px solid #00b894;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+    margin:auto;
+
 }
 
-.compare label{
-    font-weight:bold;
-    display:block;
-    margin-bottom:10px;
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
 }
 
-/* ==========================
-   Histogram
-========================== */
-
-.histogram{
-    height:170px;
-    background:#FFF3CD;
-    border-top:2px solid #FBC02D;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-#histogramCanvas{
-    width:95%;
-    height:140px;
-    background:white;
-    border-radius:10px;
-}
-
-/* ==========================
-   Scrollbar
-========================== */
-
-::-webkit-scrollbar{
-    width:8px;
-}
-
-::-webkit-scrollbar-thumb{
-    background:#FBC02D;
-    border-radius:20px;
-}
-
-::-webkit-scrollbar-track{
-    background:#FFF8E1;
-}
-
-/* ==========================
-   Responsive
-========================== */
+/* ================= Responsive ================= */
 
 @media(max-width:768px){
 
-    #app{
-        flex-direction:column;
-    }
+header{
 
-    .sidebar{
-        width:100%;
-        height:auto;
-        border-right:none;
-        border-bottom:2px solid #FBC02D;
-    }
+    padding:15px;
 
-    .viewer{
-        height:60vh;
-    }
+}
+
+.logo{
+
+    width:65px;
+
+    height:65px;
+
+}
+
+header h1{
+
+    font-size:22px;
+
+}
+
+main{
+
+    padding:15px;
+
+}
+
+.buttons{
+
+    flex-direction:column;
+
+}
+
+button{
+
+    width:100%;
+
+}
+
+.preview{
+
+    grid-template-columns:1fr;
+
+}
+
+canvas{
+
+    min-height:280px;
+
+}
+
+}
+
+@media(min-width:1200px){
+
+main{
+
+    max-width:1400px;
+
+}
+
+canvas{
+
+    min-height:700px;
+
+}
 
 }
