@@ -2,7 +2,7 @@
 =========================================================
 Film Scan Studio
 Export Engine
-Version 1.1
+Version 2.0 HD
 AppDIGI
 =========================================================
 */
@@ -10,6 +10,10 @@ AppDIGI
 
 const ExportEngine = {
 
+
+    //--------------------------------------------------
+    // SAVE IMAGE
+    //--------------------------------------------------
 
     save(canvas){
 
@@ -29,74 +33,108 @@ const ExportEngine = {
 
 
 
-        try{
+        console.log(
+            "Exporting:",
+            canvas.width,
+            "x",
+            canvas.height
+        );
 
 
-            const link =
-                document.createElement(
-                    "a"
+
+        canvas.toBlob(
+
+            blob=>{
+
+
+                if(!blob){
+
+                    console.error(
+                        "Blob export gagal"
+                    );
+
+                    return;
+
+                }
+
+
+
+                const url =
+                    URL.createObjectURL(
+                        blob
+                    );
+
+
+
+                const link =
+                    document.createElement(
+                        "a"
+                    );
+
+
+                link.href =
+                    url;
+
+
+                link.download =
+                    "film-scan-hd.jpg";
+
+
+
+                document.body.appendChild(
+                    link
                 );
 
 
-            link.download =
-"film-scan-result.png";
-
-
-link.href =
-canvas.toDataURL(
-"image/png"
-);
+                link.click();
 
 
 
-            document.body.appendChild(
-                link
-            );
-
-
-            link.click();
-
-
-            document.body.removeChild(
-                link
-            );
-
-
-
-            console.log(
-                "Export JPG Finished"
-            );
-
-
-
-            if(window.UI){
-
-                UI.toast(
-                    "JPG berhasil disimpan"
+                document.body.removeChild(
+                    link
                 );
 
-            }
+
+
+                URL.revokeObjectURL(
+                    url
+                );
 
 
 
-        }
-        catch(error){
+                console.log(
+                    "Export Finished"
+                );
 
 
-            console.error(
-                "Export Error:",
-                error
-            );
+
+                if(window.UI){
+
+                    UI.toast(
+                        "Foto HD berhasil disimpan"
+                    );
+
+                }
 
 
-        }
+
+            },
+
+
+            "image/jpeg",
+
+
+            1.0
+
+
+        );
 
 
     }
 
 
-};
 
+};
 
 
 
