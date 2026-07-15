@@ -2,7 +2,7 @@
 =========================================================
 Film Scan Studio
 Export Engine
-Version 1.0
+Version 1.1
 AppDIGI
 =========================================================
 */
@@ -11,50 +11,14 @@ AppDIGI
 const ExportEngine = {
 
 
-    canvas:null,
+    save(canvas){
 
 
-
-    init(){
-
-
-        this.canvas =
-            document.getElementById(
-                "preview"
-            );
-
-
-        console.log(
-            "Export Engine Ready"
-        );
-
-
-    },
-
-
-
-
-    exportJPG(){
-
-
-        if(!this.canvas){
-
-
-            this.canvas =
-                document.getElementById(
-                    "preview"
-                );
-
-
-        }
-
-
-
-        if(!this.canvas){
+        if(!canvas){
 
 
             console.error(
-                "Preview canvas tidak ditemukan"
+                "Export gagal: canvas kosong"
             );
 
 
@@ -65,37 +29,72 @@ const ExportEngine = {
 
 
 
-        const link =
-            document.createElement(
-                "a"
+        try{
+
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.download =
+                "film-scan-result.jpg";
+
+
+
+            link.href =
+                canvas.toDataURL(
+                    "image/jpeg",
+                    0.95
+                );
+
+
+
+            document.body.appendChild(
+                link
             );
 
 
-        link.download =
-            "film-scan-result.jpg";
+            link.click();
 
 
-
-        link.href =
-            this.canvas.toDataURL(
-                "image/jpeg",
-                0.95
+            document.body.removeChild(
+                link
             );
 
 
 
-        link.click();
+            console.log(
+                "Export JPG Finished"
+            );
 
 
 
-        console.log(
-            "Export JPG Finished"
-        );
+            if(window.UI){
+
+                UI.toast(
+                    "JPG berhasil disimpan"
+                );
+
+            }
+
+
+
+        }
+        catch(error){
+
+
+            console.error(
+                "Export Error:",
+                error
+            );
+
+
+        }
 
 
     }
-
-
 
 
 };
@@ -109,12 +108,6 @@ window.ExportEngine =
 
 
 
-window.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-
-    ExportEngine.init();
-
-
-});
+console.log(
+    "Export Engine Loaded"
+);
