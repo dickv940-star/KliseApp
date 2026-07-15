@@ -1,0 +1,477 @@
+/* ===================================================
+   Film Scan Studio
+   AppDIGI
+=================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+}
+
+body{
+
+    background:#111;
+
+    color:#fff;
+
+    min-height:100vh;
+
+}
+
+/* ================= HEADER ================= */
+
+header{
+
+    background:#1b1b1b;
+
+    padding:20px;
+
+    text-align:center;
+
+    border-bottom:1px solid #333;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+
+}
+
+.logo{
+
+    width:80px;
+
+    height:80px;
+
+    object-fit:contain;
+
+    margin-bottom:10px;
+
+}
+
+header h1{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#ffffff;
+
+}
+
+header p{
+
+    color:#aaa;
+
+    margin-top:6px;
+
+    font-size:14px;
+
+}
+
+/* ================= MAIN ================= */
+
+main{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:20px;
+
+}
+
+/* ================= CARD ================= */
+
+section{
+
+    background:#1a1a1a;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 8px 30px rgba(0,0,0,.35);
+
+}
+
+/* ================= Upload ================= */
+
+.upload{
+
+    border:2px dashed #555;
+
+    transition:.3s;
+
+    text-align:center;
+
+}
+
+.upload:hover{
+
+    border-color:#4cafef;
+
+    background:#202020;
+
+}
+
+input[type=file]{
+
+    width:100%;
+
+    color:white;
+
+    padding:25px;
+
+    cursor:pointer;
+
+}
+
+/* ================= Canvas ================= */
+
+canvas{
+
+    width:100%;
+
+    border-radius:12px;
+
+    background:#000;
+
+    display:block;
+
+    min-height:400px;
+
+    object-fit:contain;
+
+}
+
+/* ================= BUTTON ================= */
+
+.buttons{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+button{
+
+    flex:1;
+
+    min-width:180px;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    transition:.25s;
+
+}
+
+/* Generate */
+
+#generate{
+
+    background:#00b894;
+
+    color:white;
+
+}
+
+#generate:hover{
+
+    background:#00a382;
+
+    transform:translateY(-2px);
+
+}
+
+/* Export */
+
+#export{
+
+    background:#0984e3;
+
+    color:white;
+
+}
+
+#export:hover{
+
+    background:#0875ca;
+
+    transform:translateY(-2px);
+
+}
+
+/* Disabled */
+
+button:disabled{
+
+    opacity:.4;
+
+    cursor:not-allowed;
+
+}
+
+/* ================= PANEL ================= */
+
+.panel{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:15px;
+
+}
+
+.card{
+
+    background:#202020;
+
+    padding:18px;
+
+    border-radius:12px;
+
+}
+
+.card h3{
+
+    margin-bottom:10px;
+
+    color:#ddd;
+
+}
+
+.card label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#aaa;
+
+}
+
+.card input[type=range]{
+
+    width:100%;
+
+}
+
+/* ================= Preview ================= */
+
+.preview{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
+}
+
+.preview img{
+
+    width:100%;
+
+    border-radius:12px;
+
+}
+
+/* ================= Footer ================= */
+
+footer{
+
+    text-align:center;
+
+    padding:30px;
+
+    color:#777;
+
+    font-size:14px;
+
+}
+
+/* ================= Progress ================= */
+
+.progress{
+
+    width:100%;
+
+    height:8px;
+
+    background:#333;
+
+    border-radius:50px;
+
+    overflow:hidden;
+
+}
+
+.progress div{
+
+    width:0%;
+
+    height:100%;
+
+    background:#00d084;
+
+    transition:.3s;
+
+}
+
+/* ================= Toast ================= */
+
+.toast{
+
+    position:fixed;
+
+    bottom:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#222;
+
+    color:white;
+
+    padding:14px 20px;
+
+    border-radius:10px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.4);
+
+    display:none;
+
+    z-index:9999;
+
+}
+
+/* ================= Loader ================= */
+
+.loader{
+
+    width:55px;
+
+    height:55px;
+
+    border:5px solid #444;
+
+    border-top:5px solid #00b894;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+    margin:auto;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ================= Responsive ================= */
+
+@media(max-width:768px){
+
+header{
+
+    padding:15px;
+
+}
+
+.logo{
+
+    width:65px;
+
+    height:65px;
+
+}
+
+header h1{
+
+    font-size:22px;
+
+}
+
+main{
+
+    padding:15px;
+
+}
+
+.buttons{
+
+    flex-direction:column;
+
+}
+
+button{
+
+    width:100%;
+
+}
+
+.preview{
+
+    grid-template-columns:1fr;
+
+}
+
+canvas{
+
+    min-height:280px;
+
+}
+
+}
+
+@media(min-width:1200px){
+
+main{
+
+    max-width:1400px;
+
+}
+
+canvas{
+
+    min-height:700px;
+
+}
+
+}
