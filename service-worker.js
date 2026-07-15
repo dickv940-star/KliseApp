@@ -1,67 +1,228 @@
-const CACHE="film-scan-v1";
+/*
+=========================================================
+Film Scan Studio
+Service Worker
+Version 1.1
+AppDIGI
+=========================================================
+*/
 
-const FILES=[
 
-"./",
+const CACHE_NAME = "film-scan-v2";
 
-"./index.html",
 
-"./manifest.json",
+const FILES_TO_CACHE = [
 
-"./css/style.css",
+    "./",
 
-"./js/app.js",
+    "./index.html",
 
-"./js/ui.js",
+    "./manifest.json",
 
-"./js/image-engine.js",
 
-"./js/preset-engine.js",
+    // CSS
+    "./css/style.css",
 
-"./js/export.js",
 
-"./assets/logo.png",
+    // CORE JS
+    "./js/app.js",
+    "./js/ui.js",
+    "./js/image-engine.js",
+    "./js/preset-engine.js",
+    "./js/export.js",
 
-"./assets/icon-192.png",
 
-"./assets/icon-512.png"
+    // ASSETS
+    "./assets/logo.png",
+    "./assets/icon-192.png",
+    "./assets/icon-512.png"
 
 ];
 
-self.addEventListener("install",e=>{
 
-e.waitUntil(
 
-caches.open(CACHE)
 
-.then(cache=>cache.addAll(FILES))
 
-);
+// ================================
+// INSTALL
+// ================================
+
+self.addEventListener(
+"install",
+event => {
+
+
+    console.log(
+        "Service Worker Installing..."
+    );
+
+
+    event.waitUntil(
+
+        caches.open(CACHE_NAME)
+
+        .then(async cache => {
+
+
+            for(
+                const file of FILES_TO_CACHE
+            ){
+
+
+                try{
+
+
+                    await cache.add(file);
+
+
+                    console.log(
+                        "Cached:",
+                        file
+                    );
+
+
+                }
+                catch(error){
+
+
+                    console.warn(
+                        "Skip missing file:",
+                        file
+                    );
+
+
+                }
+
+
+            }
+
+
+        })
+
+
+    );
+
+
+    self.skipWaiting();
+
 
 });
 
-self.addEventListener("activate",e=>{
 
-e.waitUntil(
 
-self.clients.claim()
 
-);
+
+
+
+// ================================
+// ACTIVATE
+// ================================
+
+self.addEventListener(
+"activate",
+event => {
+
+
+    console.log(
+        "Service Worker Activated"
+    );
+
+
+    event.waitUntil(
+
+        caches.keys()
+
+        .then(keys => {
+
+
+            return Promise.all(
+
+                keys.map(key=>{
+
+
+                    if(
+                        key !== CACHE_NAME
+                    ){
+
+                        console.log(
+                            "Delete old cache:",
+                            key
+                        );
+
+
+                        return caches.delete(key);
+
+                    }
+
+
+                })
+
+            );
+
+
+        })
+
+
+    );
+
+
+    self.clients.claim();
+
 
 });
 
-self.addEventListener("fetch",e=>{
 
-e.respondWith(
 
-caches.match(e.request)
 
-.then(res=>{
 
-return res || fetch(e.request);
 
-})
 
-);
+// ================================
+// FETCH
+// ================================
+
+self.addEventListener(
+"fetch",
+event => {
+
+
+    event.respondWith(
+
+
+        caches.match(
+            event.request
+        )
+
+        .then(response=>{
+
+
+            return response ||
+
+            fetch(event.request)
+
+            .then(fetchResponse=>{
+
+
+                return fetchResponse;
+
+
+            });
+
+
+        })
+
+        .catch(()=>{
+
+
+            return caches.match(
+                "./index.html"
+            );
+
+
+        })
+
+
+    );
+
 
 });
