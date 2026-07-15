@@ -1,9 +1,10 @@
 /*
-===========================================
+=========================================
 Film Scan Studio
+App Controller
+Version 2.0
 AppDIGI
-app.js
-===========================================
+=========================================
 */
 
 const App = {
@@ -11,22 +12,20 @@ const App = {
     canvas: null,
     ctx: null,
 
-    image: null,
-
-    currentFile: null,
-
     init() {
 
         console.log("Film Scan Studio Started");
 
         this.canvas = document.getElementById("canvas");
-        this.ctx = this.canvas.getContext("2d");
+        this.ctx = this.canvas.getContext("2d", {
+            willReadFrequently: true
+        });
+
+        ImageEngine.init(this.canvas);
 
         this.bindUpload();
 
-        this.bindButtons();
-
-        this.registerSW();
+        this.bindExport();
 
     },
 
@@ -34,13 +33,13 @@ const App = {
 
         const upload = document.getElementById("upload");
 
-        upload.addEventListener("change", (e) => {
+        upload.addEventListener("change", async (e) => {
 
             const file = e.target.files[0];
 
             if (!file) return;
 
-            this.loadImage(file);
+            await this.process(file);
 
         });
 
@@ -60,7 +59,7 @@ const App = {
 
         });
 
-        area.addEventListener("drop", (e) => {
+        area.addEventListener("drop", async (e) => {
 
             e.preventDefault();
 
@@ -70,185 +69,76 @@ const App = {
 
             if (!file) return;
 
-            this.loadImage(file);
+            await this.process(file);
 
         });
 
     },
 
-    loadImage(file) {
+    async process(file) {
 
-        this.currentFile = file;
+        try {
 
-        const reader = new FileReader();
+            UI.showLoading("Loading Scan...");
 
-        reader.onload = () => {
+            await ImageEngine.load(file);
 
-            const img = new Image();
+            UI.progress(20);
 
-            img.onload = () => {
+            UI.showLoading("Generating Preset...");
 
-                this.image = img;
+            await new Promise(resolve => setTimeout(resolve, 100));
 
-                this.draw(img);
+            PresetEngine.apply(
+                ImageEngine.canvas,
+                ImageEngine.ctx
+            );
 
-                this.toast("Foto berhasil dimuat");
+            UI.progress(100);
 
-            };
+            UI.hideLoading();
 
-            img.src = reader.result;
+            UI.toast("Preset berhasil diterapkan");
 
-        };
-
-        reader.readAsDataURL(file);
-
-    },
-
-    draw(img) {
-
-        this.canvas.width = img.width;
-
-        this.canvas.height = img.height;
-
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.ctx.drawImage(
-
-            img,
-
-            0,
-
-            0,
-
-            this.canvas.width,
-
-            this.canvas.height
-
-        );
-
-    },
-
-    bindButtons() {
-
-        const generate = document.getElementById("generate");
-
-        const exportBtn = document.getElementById("export");
-
-        generate.addEventListener("click", () => {
-
-            if (!this.image) {
-
-                this.toast("Upload foto terlebih dahulu");
-
-                return;
-
-            }
-
-            this.loading(true);
-
-            setTimeout(() => {
-
-                if (window.PresetEngine) {
-
-                    PresetEngine.apply(
-
-                        this.canvas,
-
-                        this.ctx
-
-                    );
-
-                }
-
-                this.loading(false);
-
-                this.toast("Preset berhasil diterapkan");
-
-            }, 300);
-
-        });
-
-        exportBtn.addEventListener("click", () => {
-
-            if (!this.image) {
-
-                this.toast("Belum ada foto");
-
-                return;
-
-            }
-
-            if (window.ExportManager) {
-
-                ExportManager.jpg(this.canvas);
-
-            }
-
-        });
-
-    },
-
-    loading(show) {
-
-        let loader = document.querySelector(".loader");
-
-        if (!loader) {
-
-            loader = document.createElement("div");
-
-            loader.className = "loader";
-
-            document.body.appendChild(loader);
+            UI.status("Ready");
 
         }
 
-        loader.style.display = show ? "block" : "none";
+        catch (err) {
 
-    },
+            console.error(err);
 
-    toast(message) {
+            UI.hideLoading();
 
-        let toast = document.querySelector(".toast");
-
-        if (!toast) {
-
-            toast = document.createElement("div");
-
-            toast.className = "toast";
-
-            document.body.appendChild(toast);
+            UI.toast("Gagal memproses gambar");
 
         }
 
-        toast.innerText = message;
-
-        toast.style.display = "block";
-
-        clearTimeout(this.toastTimer);
-
-        this.toastTimer = setTimeout(() => {
-
-            toast.style.display = "none";
-
-        }, 2500);
-
     },
 
-    registerSW() {
+    bindExport() {
 
-        if ("serviceWorker" in navigator) {
+        const jpg = document.getElementById("export");
 
-            navigator.serviceWorker
+        if (jpg) {
 
-                .register("service-worker.js")
+            jpg.addEventListener("click", () => {
 
-                .then(() => {
+                ExportManager.jpg(ImageEngine.canvas);
 
-                    console.log("Service Worker Registered");
+            });
 
-                })
+        }
 
-                .catch(console.error);
+        const png = document.getElementById("exportPNG");
+
+        if (png) {
+
+            png.addEventListener("click", () => {
+
+                ExportManager.png(ImageEngine.canvas);
+
+            });
 
         }
 
@@ -256,10 +146,8 @@ const App = {
 
 };
 
-window.addEventListener(
+window.addEventListener("DOMContentLoaded", () => {
 
-    "DOMContentLoaded",
+    App.init();
 
-    () => App.init()
-
-);
+});
