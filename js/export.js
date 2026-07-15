@@ -39,15 +39,13 @@ const ExportEngine = {
 
 
             link.download =
-                "film-scan-result.jpg";
+"film-scan-result.png";
 
 
-
-            link.href =
-                canvas.toDataURL(
-                    "image/jpeg",
-                        1.0
-                );
+link.href =
+canvas.toDataURL(
+"image/png"
+);
 
 
 
