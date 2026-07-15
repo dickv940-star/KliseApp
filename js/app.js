@@ -228,12 +228,25 @@ const App = {
 
         }
 
+const applyRestore =
+document.getElementById(
+"applyRestore"
+);
 
+
+if(applyRestore){
+
+applyRestore.addEventListener(
+"click",
+async()=>{
+
+await this.restore();
+
+}
+);
+
+}
     },
-
-
-
-
 
 
 
@@ -617,9 +630,63 @@ const App = {
             );
 
 
-        });
+        })
+
+//--------------------------------------------------
+
+async restore(){
 
 
+try{
+
+
+UI.loading(true);
+
+
+UI.status(
+"Advanced Restoration..."
+);
+
+
+
+await RestorationEngine.process(
+this.canvas
+);
+
+
+
+UI.status(
+"Restoration Finished"
+);
+
+
+
+UI.toast(
+"Restoration Complete"
+);
+
+
+
+}
+
+
+catch(err){
+
+console.error(err);
+
+UI.toast(
+"Restoration Failed"
+);
+
+
+}
+
+
+
+UI.loading(false);
+
+
+}
 
     }
 
