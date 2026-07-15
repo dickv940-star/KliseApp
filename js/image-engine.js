@@ -2,39 +2,59 @@
 =========================================================
 Film Scan Studio
 Image Engine
-Version 2.0
+Version 2.1 HD
 AppDIGI
 =========================================================
 */
 
+
 const ImageEngine = {
 
-    canvas: null,
 
-    ctx: null,
+    canvas:null,
 
-    image: null,
+    ctx:null,
+
+    image:null,
+
+
 
     //--------------------------------------------------
-
     init(canvas){
+
 
         this.canvas = canvas;
 
-        this.ctx = canvas.getContext(
-            "2d",
-            {
-                willReadFrequently:true
-            }
-        );
+
+        this.ctx =
+            canvas.getContext(
+                "2d",
+                {
+                    alpha:false,
+                    willReadFrequently:true
+                }
+            );
+
+
+        this.ctx.imageSmoothingEnabled = true;
+
+
+        this.ctx.imageSmoothingQuality =
+            "high";
+
 
     },
 
-    //--------------------------------------------------
 
+
+
+    //--------------------------------------------------
     load(file,canvas){
 
-        return new Promise((resolve,reject)=>{
+
+        return new Promise(
+        (resolve,reject)=>{
+
 
             if(!this.canvas){
 
@@ -42,71 +62,143 @@ const ImageEngine = {
 
             }
 
-            const reader=new FileReader();
 
-            reader.onload=(e)=>{
 
-                const img=new Image();
+            const reader =
+                new FileReader();
 
-                img.onload=()=>{
 
-                    this.image=img;
 
-                    this.draw(img);
+            reader.onload =
+            e=>{
 
-                    resolve(img);
+
+                const img =
+                    new Image();
+
+
+
+                img.onload =
+                ()=>{
+
+
+                    this.image =
+                        img;
+
+
+                    this.draw(
+                        img
+                    );
+
+
+                    resolve(
+                        img
+                    );
+
 
                 };
 
-                img.onerror=reject;
 
-                img.src=e.target.result;
+
+                img.onerror =
+                    reject;
+
+
+
+                img.src =
+                    e.target.result;
+
+
 
             };
 
-            reader.onerror=reject;
 
-            reader.readAsDataURL(file);
+
+            reader.onerror =
+                reject;
+
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+
 
         });
 
+
     },
 
-    //--------------------------------------------------
 
+
+
+
+    //--------------------------------------------------
     draw(img){
 
-        const maxWidth=2500;
 
-        const maxHeight=2500;
+        let w =
+            img.naturalWidth ||
+            img.width;
 
-        let w=img.width;
 
-        let h=img.height;
+        let h =
+            img.naturalHeight ||
+            img.height;
 
-        //--------------------------------------
-        // Resize jika terlalu besar
-        //--------------------------------------
 
-        if(w>maxWidth){
 
-            h*=maxWidth/w;
+        /*
+        Jangan resize kecuali terlalu besar
+        */
 
-            w=maxWidth;
+
+        const MAX_SIZE =
+            6000;
+
+
+
+        if(
+            w > MAX_SIZE ||
+            h > MAX_SIZE
+        ){
+
+
+            const ratio =
+                Math.min(
+                    MAX_SIZE / w,
+                    MAX_SIZE / h
+                );
+
+
+            w =
+                Math.round(
+                    w * ratio
+                );
+
+
+            h =
+                Math.round(
+                    h * ratio
+                );
+
 
         }
 
-        if(h>maxHeight){
 
-            w*=maxHeight/h;
 
-            h=maxHeight;
 
-        }
 
-        this.canvas.width=w;
+        this.canvas.width =
+            w;
 
-        this.canvas.height=h;
+
+        this.canvas.height =
+            h;
+
+
+
 
         this.ctx.clearRect(
             0,
@@ -114,6 +206,9 @@ const ImageEngine = {
             w,
             h
         );
+
+
+
 
         this.ctx.drawImage(
             img,
@@ -123,19 +218,23 @@ const ImageEngine = {
             h
         );
 
+
+
         console.log(
-
-            "Image Loaded",
-
+            "HD Image Loaded",
             w,
-
             "x",
-
             h
-
         );
 
+
+
     },
+
+
+
+
+
 
     //--------------------------------------------------
 
@@ -145,7 +244,8 @@ const ImageEngine = {
 
     },
 
-    //--------------------------------------------------
+
+
 
     getContext(){
 
@@ -153,9 +253,14 @@ const ImageEngine = {
 
     },
 
+
+
+
+
     //--------------------------------------------------
 
     getImageData(){
+
 
         return this.ctx.getImageData(
 
@@ -169,11 +274,16 @@ const ImageEngine = {
 
         );
 
+
     },
 
-    //--------------------------------------------------
+
+
+
+
 
     putImageData(image){
+
 
         this.ctx.putImageData(
 
@@ -185,22 +295,27 @@ const ImageEngine = {
 
         );
 
+
     },
 
-    //--------------------------------------------------
+
+
+
+
+
 
     clone(){
 
-        const image=
 
+        const image =
             this.getImageData();
+
+
 
         return new ImageData(
 
             new Uint8ClampedArray(
-
                 image.data
-
             ),
 
             image.width,
@@ -209,23 +324,38 @@ const ImageEngine = {
 
         );
 
+
     },
+
+
+
+
+
+
 
     //--------------------------------------------------
 
     reset(){
 
+
         if(this.image){
 
-            this.draw(this.image);
+            this.draw(
+                this.image
+            );
 
         }
 
+
     },
 
-    //--------------------------------------------------
+
+
+
+
 
     clear(){
+
 
         this.ctx.clearRect(
 
@@ -239,23 +369,28 @@ const ImageEngine = {
 
         );
 
+
     },
 
-    //--------------------------------------------------
+
+
+
+
 
     async process(){
+
 
         if(!this.canvas){
 
             console.warn(
-
                 "Canvas belum tersedia"
-
             );
 
             return;
 
         }
+
+
 
         await FilmEngine.process(
 
@@ -263,6 +398,21 @@ const ImageEngine = {
 
         );
 
+
     }
 
+
+
 };
+
+
+
+
+window.ImageEngine =
+    ImageEngine;
+
+
+
+console.log(
+    "Image Engine HD Loaded"
+);
